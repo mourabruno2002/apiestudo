@@ -1,21 +1,33 @@
 package com.example.apiestudo.dto.product;
 
+import jakarta.validation.constraints.*;
+
 import java.math.BigDecimal;
 
 public class ProductRequestDTO {
 
+    @NotBlank(message = "Name is required.")
+    @Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters long.")
     private String name;
 
+    @Size(max = 255)
     private String description;
 
+    @NotBlank(message = "SKU is required.")
+    @Size(max = 50)
     private String sku;
 
+    @NotNull(message = "Price is required.")
+    @DecimalMin(value = "0.01", message = "Price cannot be negative or zero.")
     private BigDecimal price;
 
+    @Min(value = 0, message = "Stock quantity cannot be negative.")
     private int stockQuantity;
 
     private String imageUrl;
 
+    @NotNull(message = "Category is required.")
+    @Min(value = 1, message = "Category ID must be greater than or equal to 1.")
     private Long categoryId;
 
     // GETTERS
