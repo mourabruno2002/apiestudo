@@ -25,6 +25,8 @@ public class User implements UserDetails {
 
     private String role;
 
+    private String system;
+
 
     @Override
     public boolean isAccountNonExpired() {
@@ -69,6 +71,10 @@ public class User implements UserDetails {
         return role;
     }
 
+    public String getSystem() {
+        return system;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + role));
@@ -90,5 +96,9 @@ public class User implements UserDetails {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public void setSystem(String system) {
+        this.system = system;
     }
 }

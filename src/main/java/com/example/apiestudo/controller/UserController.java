@@ -28,12 +28,10 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<MessageResponse<UserResponseDTO>> createUser(@Valid @RequestBody UserRequestDTO userRequestDTO) {
-        User user = userMapper.convertRequestToUser(userRequestDTO);
-        UserResponseDTO userReceived = userService.createUser(user);
-        MessageResponse<UserResponseDTO> response = new MessageResponse<>("User created successfully.", userReceived);
+    public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserRequestDTO userRequestDTO) {
+        UserResponseDTO userReceived = userService.createUser(userRequestDTO);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(userReceived);
     }
 
     @GetMapping
@@ -63,9 +61,8 @@ public class UserController {
     }
 
    @PatchMapping("/{id}")
-    public ResponseEntity<UserResponseDTO> updateUser(@Valid @PathVariable Long id, @RequestBody UserUpdateDTO newData) {
-        User userReceived = userMapper.convertUpdateToUser(newData);
-        UserResponseDTO userUpdated = userService.updateUser(id, userReceived);
+    public ResponseEntity<UserResponseDTO> updateUser(@Valid @PathVariable Long id, @RequestBody UserUpdateDTO userUpdateDTO) {
+        UserResponseDTO userUpdated = userService.updateUser(id, userUpdateDTO);
 
         return ResponseEntity.status(HttpStatus.OK).body(userUpdated);
    }

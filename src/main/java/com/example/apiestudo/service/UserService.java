@@ -1,7 +1,9 @@
 package com.example.apiestudo.service;
 
 import com.example.apiestudo.dto.user.PasswordUpdateDTO;
+import com.example.apiestudo.dto.user.UserRequestDTO;
 import com.example.apiestudo.dto.user.UserResponseDTO;
+import com.example.apiestudo.dto.user.UserUpdateDTO;
 import com.example.apiestudo.exception.user.InvalidCurrentPasswordException;
 import com.example.apiestudo.exception.user.UserAlreadyExistsException;
 import com.example.apiestudo.exception.user.UserNotFoundException;
@@ -32,16 +34,16 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public UserResponseDTO createUser(User user) {
-        if (user.getRole() == null) {
-            user.setRole("USER");
-        }
-        if (userRepository.findByEmail(user.getUsername()).isPresent()) {
-            throw new UserAlreadyExistsException(String.format("User with email %s already exists.", user.getUsername()));
-        }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+    public UserResponseDTO createUser(UserRequestDTO userRequestDTO) {
+        User newUser = userMapper.convertRequestToUser(userRequestDTO);
 
-        return userMapper.convertUserToResponse(userRepository.save(user));
+        if (userRepository.findByEmail(newUser.getUsername()).isPresent()) {
+            throw new UserAlreadyExistsException(String.format("User with email %s already exists.", newUser.getUsername()));
+        }
+        newUser.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
+        newUser.setRole("USER");
+
+        return userMapper.convertUserToResponse(userRepository.save(newUser));
     }
 
     public Page<UserResponseDTO> findAllUsers(Pageable pageable) {
@@ -68,29 +70,27 @@ public class UserService {
         return new PageImpl<>(list, pageable, list.size());
     }
 
-    public UserResponseDTO deleteUser(Long id) {
-        User deletedUser = getUserById(id);
-        userRepository.deleteById(id);
+    public void deleteUser(Long id) {
 
-        return userMapper.convertUserToResponse(deletedUser);
+        userRepository.deleteById(id);
     }
 
-    public UserResponseDTO updateUser(Long id, User newData) {
+    public UserResponseDTO updateUser(Long id, UserUpdateDTO userUpdateDTO) {
         User existing = getUserById(id);
 
-        if (newData.getName() != null) {
-            existing.setName(newData.getName());
+        if (userUpdateDTO.getName() != null) {
+            existing.setName(userUpdateDTO.getName());
         }
 
-        if (newData.getUsername() != null) {
+        if (userUpdateDTO.getEmail() != null) {
 
-            if (!Objects.equals(newData.getUsername(), existing.getUsername())) {
+            if (!Objects.equals(userUpdateDTO.getEmail(), existing.getUsername())) {
 
-                if (userRepository.existsByEmailAndIdNot(newData.getUsername(), existing.getId())) {
-                    throw new UserAlreadyExistsException(String.format("User with email %s already exists.", newData.getUsername()));
+                if (userRepository.existsByEmailAndIdNot(userUpdateDTO.getEmail(), existing.getId())) {
+                    throw new UserAlreadyExistsException(String.format("User with email %s already exists.", userUpdateDTO.getEmail()));
 
                 } else {
-                    existing.setUsername(newData.getUsername());
+                    existing.setUsername(userUpdateDTO.getEmail());
                 }
             }
         }
