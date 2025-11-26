@@ -5,9 +5,7 @@ import com.example.apiestudo.dto.user.UserRequestDTO;
 import com.example.apiestudo.dto.user.UserResponseDTO;
 import com.example.apiestudo.dto.user.UserUpdateDTO;
 import com.example.apiestudo.mapper.UserMapper;
-import com.example.apiestudo.model.User;
 import com.example.apiestudo.service.UserService;
-import com.example.apiestudo.utils.MessageResponse;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,7 +27,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserRequestDTO userRequestDTO) {
-        UserResponseDTO userReceived = userService.createUser(userRequestDTO);
+        UserResponseDTO userReceived = userService.create(userRequestDTO);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(userReceived);
     }
@@ -39,9 +37,9 @@ public class UserController {
         Page<UserResponseDTO> foundUsers;
 
         if (email == null) {
-            foundUsers = userService.findAllUsers(pageable);
+            foundUsers = userService.findAll(pageable);
         } else {
-            foundUsers = userService.searchUsers(email, pageable);
+            foundUsers = userService.search(email, pageable);
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(foundUsers);
@@ -50,19 +48,19 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {
 
-        return ResponseEntity.status(HttpStatus.OK).body(userService.findUserById(id));
+        return ResponseEntity.status(HttpStatus.OK).body(userService.findById(id));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
+        userService.deleteById(id);
 
         return ResponseEntity.noContent().build();
     }
 
    @PatchMapping("/{id}")
     public ResponseEntity<UserResponseDTO> updateUser(@Valid @PathVariable Long id, @RequestBody UserUpdateDTO userUpdateDTO) {
-        UserResponseDTO userUpdated = userService.updateUser(id, userUpdateDTO);
+        UserResponseDTO userUpdated = userService.update(id, userUpdateDTO);
 
         return ResponseEntity.status(HttpStatus.OK).body(userUpdated);
    }

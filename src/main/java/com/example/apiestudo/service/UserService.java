@@ -34,7 +34,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public UserResponseDTO createUser(UserRequestDTO userRequestDTO) {
+    public UserResponseDTO create(UserRequestDTO userRequestDTO) {
         User newUser = userMapper.convertRequestToUser(userRequestDTO);
 
         if (userRepository.findByEmail(newUser.getUsername()).isPresent()) {
@@ -46,21 +46,21 @@ public class UserService {
         return userMapper.convertUserToResponse(userRepository.save(newUser));
     }
 
-    public Page<UserResponseDTO> findAllUsers(Pageable pageable) {
-        return userRepository.findAll(pageable).map(userMapper::convertUserToResponse);
-    }
-
-    public UserResponseDTO findUserById(Long id) {
+    public UserResponseDTO findById(Long id) {
         return userMapper.convertUserToResponse(getUserById(id));
     }
 
-    public UserResponseDTO findUserByEmail(String email) {
+    public Page<UserResponseDTO> findAll(Pageable pageable) {
+        return userRepository.findAll(pageable).map(userMapper::convertUserToResponse);
+    }
+
+    public UserResponseDTO findByEmail(String email) {
         return userRepository.findByEmail(email).map(userMapper::convertUserToResponse).orElseThrow(
                 () -> new UserNotFoundException(String.format("User with email %s not found.", email))
         );
     }
 
-    public Page<UserResponseDTO> searchUsers(String email, Pageable pageable) {
+    public Page<UserResponseDTO> search(String email, Pageable pageable) {
 
         Optional<User> foundUser = userRepository.findByEmail(email);
         List<UserResponseDTO> list = new ArrayList<>();
@@ -70,12 +70,7 @@ public class UserService {
         return new PageImpl<>(list, pageable, list.size());
     }
 
-    public void deleteUser(Long id) {
-
-        userRepository.deleteById(id);
-    }
-
-    public UserResponseDTO updateUser(Long id, UserUpdateDTO userUpdateDTO) {
+    public UserResponseDTO update(Long id, UserUpdateDTO userUpdateDTO) {
         User existing = getUserById(id);
 
         if (userUpdateDTO.getName() != null) {
@@ -110,6 +105,11 @@ public class UserService {
         }
     }
 
+    public void deleteById(Long id) {
+
+        userRepository.deleteById(id);
+    }
+
     // INTERNAL METHODS
     public User getUserById(Long id) {
         return userRepository.findById(id).orElseThrow(
@@ -117,7 +117,7 @@ public class UserService {
         );
     }
 
-    public Optional<User> findUserEntityByEmail(String email) {
+    public Optional<User> findEntityByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 

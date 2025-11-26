@@ -1,6 +1,6 @@
 package com.example.apiestudo.service;
 
-import com.example.apiestudo.exception.ClientNotFoundException;
+import com.example.apiestudo.exception.client.ClientNotFoundException;
 import com.example.apiestudo.mapper.ClientMapper;
 import com.example.apiestudo.repository.ClientRepository;
 import com.example.apiestudo.dto.client.ClientResponseDTO;

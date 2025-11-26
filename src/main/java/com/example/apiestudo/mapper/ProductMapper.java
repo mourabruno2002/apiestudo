@@ -4,7 +4,6 @@ import com.example.apiestudo.dto.product.ProductRequestDTO;
 import com.example.apiestudo.dto.product.ProductResponseDTO;
 import com.example.apiestudo.model.Product;
 import com.example.apiestudo.utils.MapperUtils;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 @Component

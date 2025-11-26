@@ -1,37 +1,30 @@
 package com.example.apiestudo.dto.product;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
 
-public class ProductRequestDTO {
+public class ProductUpdateDTO {
 
-    @NotBlank(message = "Name is required.")
-    @Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters long.")
+    @Size(max = 100, message = "Name must be shoter than 100 characters long.")
     private String name;
 
-    @Size(max = 255, message = "Description must be short than 255 characters.")
+    @Size(max = 255, message = "Description must be shorter than 255 characters.")
     private String description;
 
-    @NotBlank(message = "SKU is required.")
-    @Size(max = 50, message = "SKU must be short than 50 characters.")
+    @Size(max = 50, message = "SKU must be shorter than 50 characters.")
     private String sku;
 
-    @NotNull(message = "Price is required.")
-    @DecimalMin(value = "0.01", message = "Price cannot be negative or zero.")
+    @DecimalMin("0.01")
     private BigDecimal price;
-
-    @Min(value = 0, message = "Stock quantity cannot be negative.")
-    private int stockQuantity;
 
     private String imageUrl;
 
-    @NotNull(message = "Category is required.")
-    @Min(value = 1, message = "Category ID must be greater than or equal to 1.")
     private Long categoryId;
 
-    // GETTERS
 
+    // GETTERS
     public String getName() {
         return name;
     }
@@ -46,10 +39,6 @@ public class ProductRequestDTO {
 
     public BigDecimal getPrice() {
         return price;
-    }
-
-    public int getStockQuantity() {
-        return stockQuantity;
     }
 
     public String getImageUrl() {
@@ -75,10 +64,6 @@ public class ProductRequestDTO {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
-    }
-
-    public void setStockQuantity(int stockQuantity) {
-        this.stockQuantity = stockQuantity;
     }
 
     public void setImageUrl(String imageUrl) {
