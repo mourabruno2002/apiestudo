@@ -102,7 +102,7 @@ public class ProductService {
         Product product = getById(id);
 
         if (productActiveDTO.getActive() == null) {
-            throw new FieldRequiredException("Field active is required.");
+            throw new FieldRequiredException("The field 'active' is required.");
         }
 
         product.setActive(productActiveDTO.getActive());
