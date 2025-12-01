@@ -1,9 +1,7 @@
 package com.example.apiestudo.service;
 
-import com.example.apiestudo.dto.product.ProductActiveDTO;
-import com.example.apiestudo.dto.product.ProductRequestDTO;
-import com.example.apiestudo.dto.product.ProductResponseDTO;
-import com.example.apiestudo.dto.product.ProductUpdateDTO;
+import com.example.apiestudo.dto.product.*;
+import com.example.apiestudo.exception.FieldInvalidException;
 import com.example.apiestudo.exception.FieldRequiredException;
 import com.example.apiestudo.exception.category.CategoryNotFoundException;
 import com.example.apiestudo.exception.product.DuplicateSkuException;
@@ -106,6 +104,23 @@ public class ProductService {
         }
 
         product.setActive(productActiveDTO.getActive());
+
+        return productMapper.convertProductToResponse(productRepository.save(product));
+    }
+
+    @Transactional
+    public ProductResponseDTO updateStock(Long id, ProductStockDTO productStockDTO) {
+        Product product = getById(id);
+
+        if (productStockDTO.getStockQuantity() == null) {
+            throw new FieldRequiredException("The field 'stockQuantity' is required.");
+        }
+
+        if (productStockDTO.getStockQuantity() < 0) {
+            throw new FieldInvalidException("The field 'stockQuantity' cannot be negative.");
+        }
+
+        product.setStockQuantity(productStockDTO.getStockQuantity());
 
         return productMapper.convertProductToResponse(productRepository.save(product));
     }
