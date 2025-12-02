@@ -20,13 +20,12 @@ public class ClientMapper {
     }
 
     public ClientResponseDTO convertClientToResponse(Client client) {
-        ClientResponseDTO dto = mapperUtils.map(client, ClientResponseDTO.class);
+        ClientResponseDTO clientResponseDTO = mapperUtils.map(client, ClientResponseDTO.class);
 
-        dto.setEmail(maskEmail(client.getEmail()));
-        dto.setPhoneNumber(maskPhone(client.getPhoneNumber()));
-        dto.setSystem("Clients API v2");
+        clientResponseDTO.setEmail(maskEmail(client.getEmail()));
+        clientResponseDTO.setPhoneNumber(maskPhone(client.getPhoneNumber()));
 
-        return dto;
+        return clientResponseDTO;
     }
 
     private String maskEmail(String email) {
@@ -43,7 +42,7 @@ public class ClientMapper {
     private String maskPhone(String phone) {
         if (phone.length() < 8) return phone;
 
-        return "*********" + phone.substring(phone.length() -2);
+        return "********" + phone.substring(phone.length() -2);
     }
 
 }

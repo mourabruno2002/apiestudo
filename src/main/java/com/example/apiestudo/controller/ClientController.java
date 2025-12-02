@@ -26,7 +26,7 @@ public class ClientController {
 
     @PostMapping
     public ResponseEntity<MessageResponse<ClientResponseDTO>> createClient(@Valid @RequestBody ClientRequestDTO clientRequestDTO) {
-        ClientResponseDTO newClient = clientService.createClient(clientMapper.convertRequestToClient(clientRequestDTO));
+        ClientResponseDTO newClient = clientService.create(clientMapper.convertRequestToClient(clientRequestDTO));
         MessageResponse<ClientResponseDTO> response = new MessageResponse<>("Client created successfully.", newClient);
 
         return ResponseEntity.status(200).body(response);

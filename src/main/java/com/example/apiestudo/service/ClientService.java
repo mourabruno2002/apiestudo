@@ -1,5 +1,7 @@
 package com.example.apiestudo.service;
 
+import com.example.apiestudo.dto.client.ClientRequestDTO;
+import com.example.apiestudo.exception.client.ClientAlreadyExistsException;
 import com.example.apiestudo.exception.client.ClientNotFoundException;
 import com.example.apiestudo.mapper.ClientMapper;
 import com.example.apiestudo.repository.ClientRepository;
@@ -20,10 +22,20 @@ public class ClientService {
         this.clientMapper = clientMapper;
     }
 
-    public ClientResponseDTO createClient(Client client) {
-        Client newClient = clientRepository.save(client);
+    public ClientResponseDTO create(ClientRequestDTO clientRequestDTO) {
+        if (clientRepository.existsByCPF(clientRequestDTO.getCPF())) {
+            throw new ClientAlreadyExistsException("A client with this CPF already exists.");
+        }
 
-        return clientMapper.convertClientToResponse(newClient);
+        if (clientRepository.existsByEmail(clientRequestDTO.getEmail())) {
+            throw new ClientAlreadyExistsException("A client with this email already exists.");
+        }
+
+        Client client = clientMapper.convertRequestToClient(clientRequestDTO);
+
+        client.setSystem("Client V2");
+
+        return clientMapper.convertClientToResponse(clientRepository.save(client));
     }
 
     public Page<ClientResponseDTO> findAllClients(Pageable pageable) {

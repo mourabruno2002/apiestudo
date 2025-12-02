@@ -20,6 +20,8 @@ public class Client {
 
     private String phoneNumber;
 
+    private String System;
+
     // GETTERS
     public Long getId() {
         return Id;
@@ -41,6 +43,10 @@ public class Client {
         return phoneNumber;
     }
 
+    public String getSystem() {
+        return System;
+    }
+
     // SETTERS
     public void setName(String name) {
         this.name = name;
@@ -56,5 +62,9 @@ public class Client {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public void setSystem(String system) {
+        System = system;
     }
 }
