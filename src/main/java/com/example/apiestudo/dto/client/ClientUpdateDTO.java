@@ -1,31 +1,25 @@
 package com.example.apiestudo.dto.client;
 
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.br.CPF;
 
-public class ClientRequestDTO {
+public class ClientUpdateDTO {
 
-    @NotBlank(message = "Name is required.")
-    @Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters long.")
+    @Size(max = 100, message = "Name must be shorter than 100 characters.")
     String name;
 
-    @Column(unique = true)
-    @NotBlank(message = "CPF is required.")
-    @CPF(message = "CPF format invalid.")
+    @CPF(message = "Invalid CPF format.")
     private String CPF;
 
-    @Column(unique = true)
-    @Email(message = "Email format invalid.")
-    @NotBlank(message = "Email is required.")
+    @Email(message = "Invalid email format.")
     private String email;
 
     @Pattern(regexp = "(^\\d{10,11}|\\(\\d{2}\\)\\s\\d{4,5}-\\d{4}$)", message = "Phone number format is invalid.")
-    @NotBlank(message = "Phone number is required.")
     private String phoneNumber;
+
+    //GETTERS
 
     public String getName() {
         return name;
@@ -42,6 +36,8 @@ public class ClientRequestDTO {
     public String getPhoneNumber() {
         return phoneNumber;
     }
+
+    //SETTERS
 
     public void setName(String name) {
         this.name = name;

@@ -1,6 +1,10 @@
 package com.example.apiestudo.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "clients")
@@ -8,31 +12,47 @@ public class Client {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 
-    String name;
+    private String name;
 
     @Column(unique = true)
-    private String CPF;
+    private String cpf;
 
     @Column(unique = true)
     private String email;
 
     private String phoneNumber;
 
-    private String System;
+    private boolean active;
+
+    private String system;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
+
+    @Version
+    private Long version;
+
+    public Client(){
+
+    }
+
 
     // GETTERS
     public Long getId() {
-        return Id;
+        return id;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getCPF() {
-        return CPF;
+    public String getCpf() {
+        return cpf;
     }
 
     public String getEmail() {
@@ -43,8 +63,24 @@ public class Client {
         return phoneNumber;
     }
 
+    public boolean isActive() {
+        return active;
+    }
+
     public String getSystem() {
-        return System;
+        return system;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public Long getVersion() {
+        return version;
     }
 
     // SETTERS
@@ -52,8 +88,8 @@ public class Client {
         this.name = name;
     }
 
-    public void setCPF(String CPF) {
-        this.CPF = CPF;
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
     }
 
     public void setEmail(String email) {
@@ -64,7 +100,12 @@ public class Client {
         this.phoneNumber = phoneNumber;
     }
 
-    public void setSystem(String system) {
-        System = system;
+    public void setActive(boolean active) {
+        this.active = active;
     }
+
+    public void setSystem(String system) {
+        this.system = system;
+    }
+
 }

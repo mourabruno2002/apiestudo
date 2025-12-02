@@ -10,8 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface ClientRepository extends JpaRepository<Client, Long> {
 
-    @Query("SELECT c FROM Client c WHERE name LIKE %:name%")
-    public Page<ClientResponseDTO> findClientsByName(@Name("name") String name, Pageable pageable);
+    Page<Client> findByNameContainingIgnoreCase(String name, Pageable pageable);
 
     boolean existsByEmail(String email);
 
