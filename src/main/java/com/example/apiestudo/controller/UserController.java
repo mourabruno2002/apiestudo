@@ -4,7 +4,6 @@ import com.example.apiestudo.dto.user.PasswordUpdateDTO;
 import com.example.apiestudo.dto.user.UserRequestDTO;
 import com.example.apiestudo.dto.user.UserResponseDTO;
 import com.example.apiestudo.dto.user.UserUpdateDTO;
-import com.example.apiestudo.mapper.UserMapper;
 import com.example.apiestudo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -25,9 +24,8 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserRequestDTO userRequestDTO) {
-        UserResponseDTO userReceived = userService.create(userRequestDTO);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(userReceived);
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(userRequestDTO));
     }
 
     @GetMapping
@@ -40,13 +38,13 @@ public class UserController {
             foundUsers = userService.search(email, pageable);
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(foundUsers);
+        return ResponseEntity.ok(foundUsers);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {
 
-        return ResponseEntity.status(HttpStatus.OK).body(userService.findById(id));
+        return ResponseEntity.ok(userService.findById(id));
     }
 
     @DeleteMapping("/{id}")
@@ -58,9 +56,8 @@ public class UserController {
 
    @PatchMapping("/{id}")
     public ResponseEntity<UserResponseDTO> updateUser(@Valid @PathVariable Long id, @RequestBody UserUpdateDTO userUpdateDTO) {
-        UserResponseDTO userUpdated = userService.update(id, userUpdateDTO);
 
-        return ResponseEntity.status(HttpStatus.OK).body(userUpdated);
+        return ResponseEntity.ok(userService.update(id, userUpdateDTO));
    }
 
    @PatchMapping("/change-password/{id}")
