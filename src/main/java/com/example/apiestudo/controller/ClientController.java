@@ -1,8 +1,9 @@
 package com.example.apiestudo.controller;
 
+import com.example.apiestudo.dto.client.ClientActiveDTO;
 import com.example.apiestudo.dto.client.ClientRequestDTO;
 import com.example.apiestudo.dto.client.ClientResponseDTO;
-import com.example.apiestudo.mapper.ClientMapper;
+import com.example.apiestudo.dto.client.ClientUpdateDTO;
 import com.example.apiestudo.service.ClientService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -16,11 +17,9 @@ import org.springframework.web.bind.annotation.*;
 public class ClientController {
 
     private final ClientService clientService;
-    private final ClientMapper clientMapper;
 
-    public ClientController(ClientService clientService, ClientMapper clientMapper) {
+    public ClientController(ClientService clientService) {
         this.clientService = clientService;
-        this.clientMapper = clientMapper;
     }
 
 
@@ -42,6 +41,23 @@ public class ClientController {
         return ResponseEntity.ok(clientService.findById(id));
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<ClientResponseDTO> update(@PathVariable Long id, @Valid @RequestBody ClientUpdateDTO clientUpdateDTO) {
 
+        return ResponseEntity.ok(clientService.update(id, clientUpdateDTO));
+    }
+
+    @PatchMapping("/{id}/active")
+    public ResponseEntity<ClientResponseDTO> updateActive(@PathVariable Long id, @Valid @RequestBody ClientActiveDTO clientActiveDTO) {
+
+        return ResponseEntity.ok(clientService.updateActive(id, clientActiveDTO));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
+
+        clientService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
 
 }

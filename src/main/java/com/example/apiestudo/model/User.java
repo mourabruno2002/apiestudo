@@ -27,6 +27,9 @@ public class User implements UserDetails {
 
     private String system;
 
+    public User() {
+
+    }
 
     @Override
     public boolean isAccountNonExpired() {

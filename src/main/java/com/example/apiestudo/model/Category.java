@@ -14,6 +14,7 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     private String name;
 
     private String description;
@@ -25,6 +26,9 @@ public class Category {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    @Version
+    private Long version;
 
     public Category() {
 
@@ -54,6 +58,10 @@ public class Category {
 
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
+    }
+
+    public Long getVersion() {
+        return version;
     }
 
     // SETTERS

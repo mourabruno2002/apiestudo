@@ -112,10 +112,6 @@ public class ProductService {
     public ProductResponseDTO updateStock(Long id, ProductStockDTO productStockDTO) {
         Product product = getById(id);
 
-        if (productStockDTO.getStockQuantity() == null) {
-            throw new FieldRequiredException("The field 'stockQuantity' is required.");
-        }
-
         if (productStockDTO.getStockQuantity() < 0) {
             throw new FieldInvalidException("The field 'stockQuantity' cannot be negative.");
         }

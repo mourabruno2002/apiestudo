@@ -1,7 +1,10 @@
 package com.example.apiestudo.dto.client;
 
+import jakarta.validation.constraints.NotNull;
+
 public class ClientActiveDTO {
 
+    @NotNull(message = "Active is required.")
     private Boolean active;
 
     // GETTERS

@@ -20,12 +20,17 @@ public class ClientMapper {
     }
 
     public ClientResponseDTO convertClientToResponse(Client client) {
-        ClientResponseDTO clientResponseDTO = mapperUtils.map(client, ClientResponseDTO.class);
 
-        clientResponseDTO.setEmail(maskEmail(client.getEmail()));
-        clientResponseDTO.setPhoneNumber(maskPhone(client.getPhoneNumber()));
-
-        return clientResponseDTO;
+        return new ClientResponseDTO(
+                client.getId(),
+                client.getName(),
+                maskEmail(client.getEmail()),
+                maskPhone(client.getPhoneNumber()),
+                client.getSystem(),
+                client.isActive(),
+                client.getCreatedAt(),
+                client.getUpdatedAt()
+        );
     }
 
     private String maskEmail(String email) {

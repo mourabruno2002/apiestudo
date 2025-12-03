@@ -3,7 +3,6 @@ package com.example.apiestudo.service;
 import com.example.apiestudo.dto.client.ClientActiveDTO;
 import com.example.apiestudo.dto.client.ClientRequestDTO;
 import com.example.apiestudo.dto.client.ClientUpdateDTO;
-import com.example.apiestudo.exception.FieldRequiredException;
 import com.example.apiestudo.exception.client.ClientAlreadyExistsException;
 import com.example.apiestudo.exception.client.ClientNotFoundException;
 import com.example.apiestudo.mapper.ClientMapper;
@@ -30,7 +29,7 @@ public class ClientService {
 
     @Transactional
     public ClientResponseDTO create(ClientRequestDTO clientRequestDTO) {
-        if (clientRepository.existsByCPF(clientRequestDTO.getCPF())) {
+        if (clientRepository.existsByCpf(clientRequestDTO.getCPF())) {
             throw new ClientAlreadyExistsException("A client with this CPF already exists.");
         }
 
@@ -59,13 +58,6 @@ public class ClientService {
 
 
     @Transactional
-    public void deleteById(Long id) {
-        getById(id);
-
-        clientRepository.deleteById(id);
-    }
-
-    @Transactional
     public ClientResponseDTO update(Long id, ClientUpdateDTO newData) {
         Client client = getById(id);
 
@@ -75,7 +67,7 @@ public class ClientService {
         if (newData.getCPF() != null) {
             if (!Objects.equals(newData.getCPF(), client.getCpf())) {
 
-                if (clientRepository.existsByCPF(newData.getCPF())) {
+                if (clientRepository.existsByCpf(newData.getCPF())) {
                     throw new ClientAlreadyExistsException("A client with this CPF already exists.");
                 }
 
@@ -104,13 +96,16 @@ public class ClientService {
     public ClientResponseDTO updateActive(Long id, ClientActiveDTO clientActiveDTO) {
         Client client = getById(id);
 
-        if (clientActiveDTO == null) {
-            throw new FieldRequiredException("The field 'active' is required.");
-        }
-
         client.setActive(clientActiveDTO.getActive());
 
         return clientMapper.convertClientToResponse(client);
+    }
+
+    @Transactional
+    public void deleteById(Long id) {
+        getById(id);
+
+        clientRepository.deleteById(id);
     }
 
     // INTERNAL METHODS
