@@ -57,6 +57,10 @@ public class ClientResponseDTO {
         return phoneNumber;
     }
 
+    public boolean isActive() {
+        return active;
+    }
+
     public String getSystem() {
         return system;
     }

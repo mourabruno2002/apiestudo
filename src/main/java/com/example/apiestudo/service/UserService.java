@@ -10,6 +10,7 @@ import com.example.apiestudo.exception.user.UserNotFoundException;
 import com.example.apiestudo.mapper.UserMapper;
 import com.example.apiestudo.model.User;
 import com.example.apiestudo.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -34,6 +35,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Transactional
     public UserResponseDTO create(UserRequestDTO userRequestDTO) {
         User newUser = userMapper.convertRequestToUser(userRequestDTO);
 
@@ -70,6 +72,7 @@ public class UserService {
         return new PageImpl<>(list, pageable, list.size());
     }
 
+    @Transactional
     public UserResponseDTO update(Long id, UserUpdateDTO userUpdateDTO) {
         User existing = getUserById(id);
 
@@ -95,6 +98,7 @@ public class UserService {
         return userMapper.convertUserToResponse(existing);
     }
 
+    @Transactional
     public void updatePassword(Long id, PasswordUpdateDTO passwordUpdateDTO) {
         User foundUser = getUserById(id);
         if (passwordEncoder.matches(passwordUpdateDTO.getCurrentPassword(), foundUser.getPassword())) {
@@ -105,6 +109,7 @@ public class UserService {
         }
     }
 
+    @Transactional
     public void deleteById(Long id) {
 
         userRepository.deleteById(id);

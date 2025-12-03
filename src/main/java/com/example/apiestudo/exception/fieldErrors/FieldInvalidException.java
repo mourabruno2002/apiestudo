@@ -1,4 +1,4 @@
-package com.example.apiestudo.exception;
+package com.example.apiestudo.exception.fieldErrors;
 
 public class FieldInvalidException extends RuntimeException {
     public FieldInvalidException(String message) {

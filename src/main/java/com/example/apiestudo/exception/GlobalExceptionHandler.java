@@ -1,5 +1,7 @@
 package com.example.apiestudo.exception;
 
+import com.example.apiestudo.exception.client.ClientAlreadyExistsException;
+import com.example.apiestudo.exception.client.ClientNotFoundException;
 import com.example.apiestudo.exception.user.InvalidCurrentPasswordException;
 import com.example.apiestudo.exception.user.UserAlreadyExistsException;
 import com.example.apiestudo.exception.user.UserNotFoundException;
@@ -135,4 +137,35 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(errorResponse.getStatus()).body(errorResponse);
     }
+
+    @ExceptionHandler(ClientAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleClientAlreadyExistsException(ClientAlreadyExistsException e, HttpServletRequest request) {
+        logger.warn("Client already exists.", e);
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.CONFLICT.value(),
+                "CONFLICT",
+                e.getMessage(),
+                request.getRequestURI()
+        );
+
+        return ResponseEntity.status(errorResponse.getStatus()).body(errorResponse);
+    }
+
+    @ExceptionHandler(ClientNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleClientNotFoundException(ClientNotFoundException e, HttpServletRequest request) {
+        logger.warn("Client not found.", e);
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.NOT_FOUND.value(),
+                "NOT_FOUND",
+                e.getMessage(),
+                request.getRequestURI()
+        );
+
+        return ResponseEntity.status(errorResponse.getStatus()).body(errorResponse);
+    }
+
 }
