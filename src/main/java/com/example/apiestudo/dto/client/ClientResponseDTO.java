@@ -25,9 +25,6 @@ public class ClientResponseDTO {
     @UpdateTimestamp
     private final LocalDateTime updatedAt;
 
-    @Version
-    private Long version;
-
 
     public ClientResponseDTO(Long id, String name, String email, String phoneNumber, String system, boolean active, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
@@ -73,8 +70,5 @@ public class ClientResponseDTO {
         return updatedAt;
     }
 
-    public Long getVersion() {
-        return version;
-    }
 }
 
