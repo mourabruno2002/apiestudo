@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 
 public class CategoryActiveDTO {
 
-    @NotNull(message = "Active is required.")
+    @NotNull(message = "The field 'active' is required.")
     private Boolean active;
 
     // GETTER

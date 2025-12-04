@@ -2,7 +2,6 @@ package com.example.apiestudo.service;
 
 import com.example.apiestudo.dto.product.*;
 import com.example.apiestudo.exception.fieldErrors.FieldInvalidException;
-import com.example.apiestudo.exception.fieldErrors.FieldRequiredException;
 import com.example.apiestudo.exception.category.CategoryNotFoundException;
 import com.example.apiestudo.exception.product.DuplicateSkuException;
 import com.example.apiestudo.exception.product.ProductNotFoundException;
@@ -98,10 +97,6 @@ public class ProductService {
     @Transactional
     public ProductResponseDTO updateActive(Long id, ProductActiveDTO productActiveDTO) {
         Product product = getById(id);
-
-        if (productActiveDTO.getActive() == null) {
-            throw new FieldRequiredException("The field 'active' is required.");
-        }
 
         product.setActive(productActiveDTO.getActive());
 

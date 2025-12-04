@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 
 public class ProductStockDTO {
 
-    @NotNull(message = "StockQuantity is required.")
+    @NotNull(message = "The field 'stockQuantity' is required.")
     private Integer stockQuantity;
 
     // GETTER

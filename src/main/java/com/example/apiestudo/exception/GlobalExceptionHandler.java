@@ -1,7 +1,13 @@
 package com.example.apiestudo.exception;
 
+import com.example.apiestudo.exception.category.CategoryAlreadyExistsException;
+import com.example.apiestudo.exception.category.CategoryNotFoundException;
 import com.example.apiestudo.exception.client.ClientAlreadyExistsException;
 import com.example.apiestudo.exception.client.ClientNotFoundException;
+import com.example.apiestudo.exception.fieldErrors.FieldInvalidException;
+import com.example.apiestudo.exception.product.DuplicateSkuException;
+import com.example.apiestudo.exception.product.ProductAlreadyExistsException;
+import com.example.apiestudo.exception.product.ProductNotFoundException;
 import com.example.apiestudo.exception.user.InvalidCurrentPasswordException;
 import com.example.apiestudo.exception.user.UserAlreadyExistsException;
 import com.example.apiestudo.exception.user.UserNotFoundException;
@@ -168,4 +174,96 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(errorResponse.getStatus()).body(errorResponse);
     }
 
+    @ExceptionHandler(CategoryAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleCategoryAlreadyExistsException(CategoryAlreadyExistsException e, HttpServletRequest request) {
+        logger.warn("Category already exists.", e);
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.CONFLICT.value(),
+                "CONFLICT",
+                e.getMessage(),
+                request.getRequestURI()
+        );
+
+        return ResponseEntity.status(errorResponse.getStatus()).body(errorResponse);
+    }
+
+    @ExceptionHandler(CategoryNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleCategoryNotFoundException(CategoryNotFoundException e, HttpServletRequest request) {
+        logger.warn("Category not found.");
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.NOT_FOUND.value(),
+                "NOT_FOUND",
+                e.getMessage(),
+                request.getRequestURI()
+        );
+
+        return ResponseEntity.status(errorResponse.getStatus()).body(errorResponse);
+    }
+
+    @ExceptionHandler(FieldInvalidException.class)
+    public ResponseEntity<ErrorResponse> handleFieldInvalidException(FieldInvalidException e, HttpServletRequest request) {
+        logger.warn("Invalid field.", e);
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                "BAD_REQUEST",
+                e.getMessage(),
+                request.getRequestURI()
+        );
+
+        return ResponseEntity.status(errorResponse.getStatus()).body(errorResponse);
+    }
+
+    @ExceptionHandler(ProductAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleProductAlreadyExists(ProductAlreadyExistsException e, HttpServletRequest request) {
+        logger.warn("Product already exists.", e);
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.CONFLICT.value(),
+                "CONFLICT",
+                e.getMessage(),
+                request.getRequestURI()
+        );
+
+        return ResponseEntity.status(errorResponse.getStatus()).body(errorResponse);
+    }
+
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleProductNotFound(ProductNotFoundException e, HttpServletRequest request) {
+        logger.warn("Product not found.", e);
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.NOT_FOUND.value(),
+                "NOT_FOUND",
+                e.getMessage(),
+                request.getRequestURI()
+        );
+
+        return ResponseEntity.status(errorResponse.getStatus()).body(errorResponse);
+    }
+
+    @ExceptionHandler(DuplicateSkuException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateSkuException(DuplicateSkuException e, HttpServletRequest request) {
+        logger.warn("Duplicate SKU.", e);
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.CONFLICT.value(),
+                "CONFLICT",
+                e.getMessage(),
+                request.getRequestURI()
+        );
+
+        return ResponseEntity.status(errorResponse.getStatus()).body(errorResponse);
+    }
+
 }
+
+
