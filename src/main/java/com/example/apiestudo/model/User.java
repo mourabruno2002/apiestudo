@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -19,13 +20,19 @@ public class User implements UserDetails {
     private String name;
 
     @Column(unique = true)
-    private String email;
+    private String username;
 
     private String password;
 
     private String role;
 
     private String system;
+
+    private boolean active;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
 
     public User() {
 
@@ -62,7 +69,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return username;
     }
 
     @Override
@@ -78,6 +85,18 @@ public class User implements UserDetails {
         return system;
     }
 
+    public boolean isActive() {
+        return active;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + role));
@@ -90,7 +109,7 @@ public class User implements UserDetails {
     }
 
     public void setUsername(String email) {
-        this.email = email;
+        this.username = email;
     }
 
     public void setPassword(String password) {
@@ -103,5 +122,17 @@ public class User implements UserDetails {
 
     public void setSystem(String system) {
         this.system = system;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

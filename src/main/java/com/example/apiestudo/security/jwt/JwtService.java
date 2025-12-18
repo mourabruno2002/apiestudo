@@ -28,6 +28,11 @@ public class JwtService {
     @Value("${jwt.expiration}")
     private Long expiration;
 
+    //GETTER
+    public Long getExpiration() {
+        return expiration;
+    }
+
     public Claims extractAllClaims(String token) {
         if (token == null || token.isBlank()) {
             throw new InvalidTokenException("Invalid token.");
@@ -70,6 +75,11 @@ public class JwtService {
         String subject = userDetails.getUsername();
 
         return buildToken(claims, subject);
+    }
+
+    public Date getExpirationDate() {
+
+        return new Date(System.currentTimeMillis() + expiration);
     }
 
     // INTERNAL METHODS

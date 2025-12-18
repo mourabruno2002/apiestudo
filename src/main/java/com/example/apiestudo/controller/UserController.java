@@ -22,12 +22,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping
-    public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserRequestDTO userRequestDTO) {
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(userRequestDTO));
-    }
-
     @GetMapping
     public ResponseEntity<Page<UserResponseDTO>> getUsers(@RequestParam(required = false) String email ,Pageable pageable) {
         Page<UserResponseDTO> foundUsers;
