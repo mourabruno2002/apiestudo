@@ -4,6 +4,7 @@ import com.example.apiestudo.dto.auth.LoginRequestDTO;
 import com.example.apiestudo.dto.auth.LoginResponseDTO;
 import com.example.apiestudo.dto.auth.RegisterRequestDTO;
 import com.example.apiestudo.dto.user.UserRequestDTO;
+import com.example.apiestudo.mapper.AuthMapper;
 import com.example.apiestudo.model.User;
 import com.example.apiestudo.security.jwt.JwtService;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,11 +21,13 @@ public class AuthService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
+    private final AuthMapper authMapper;
 
-    public AuthService(JwtService jwtService, AuthenticationManager authenticationManager, UserService userService) {
+    public AuthService(JwtService jwtService, AuthenticationManager authenticationManager, UserService userService, AuthMapper authMapper) {
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
         this.userService = userService;
+        this.authMapper = authMapper;
     }
 
     public LoginResponseDTO login(LoginRequestDTO loginRequestDTO) {
@@ -43,9 +46,9 @@ public class AuthService {
     }
 
     public void register(RegisterRequestDTO registerRequestDTO) {
-        UserRequestDTO userRequestDTO =
+        UserRequestDTO userRequestDTO = authMapper.convertRegisterRequestToUserRequest(registerRequestDTO);
 
-        userService.create(registerRequestDTO);
+        userService.create(userRequestDTO);
     }
 
 }
