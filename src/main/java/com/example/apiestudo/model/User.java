@@ -34,8 +34,11 @@ public class User implements UserDetails {
 
     private LocalDateTime updatedAt;
 
-    public User() {
+    public User() {}
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role));
     }
 
     @Override
@@ -57,6 +60,7 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 
     //GETTERS
     public Long getId() {
@@ -95,11 +99,6 @@ public class User implements UserDetails {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + role));
     }
 
 

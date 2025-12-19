@@ -5,7 +5,6 @@ import com.example.apiestudo.dto.auth.LoginResponseDTO;
 import com.example.apiestudo.dto.auth.RegisterRequestDTO;
 import com.example.apiestudo.dto.user.UserRequestDTO;
 import com.example.apiestudo.mapper.AuthMapper;
-import com.example.apiestudo.model.User;
 import com.example.apiestudo.security.jwt.JwtService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,7 +12,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 
 @Service
 public class AuthService {

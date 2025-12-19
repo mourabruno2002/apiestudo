@@ -7,6 +7,7 @@ import com.example.apiestudo.dto.user.UserUpdateDTO;
 import com.example.apiestudo.exception.user.InvalidCurrentPasswordException;
 import com.example.apiestudo.exception.user.UserAlreadyExistsException;
 import com.example.apiestudo.exception.user.UserNotFoundException;
+import com.example.apiestudo.exception.user.WeakPasswordException;
 import com.example.apiestudo.mapper.UserMapper;
 import com.example.apiestudo.model.User;
 import com.example.apiestudo.repository.UserRepository;
@@ -42,6 +43,8 @@ public class UserService {
         if (userRepository.findByEmail(newUser.getUsername()).isPresent()) {
             throw new UserAlreadyExistsException(String.format("User with email %s already exists.", newUser.getUsername()));
         }
+
+        validatePassword(userRequestDTO.getPassword(), userRequestDTO.getUsername());
         newUser.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
         newUser.setRole("USER");
 
@@ -101,6 +104,9 @@ public class UserService {
     @Transactional
     public void updatePassword(Long id, PasswordUpdateDTO passwordUpdateDTO) {
         User foundUser = getUserById(id);
+
+        validatePassword(passwordUpdateDTO.getNewPassword(), foundUser.getUsername());
+
         if (passwordEncoder.matches(passwordUpdateDTO.getCurrentPassword(), foundUser.getPassword())) {
             foundUser.setPassword(passwordEncoder.encode(passwordUpdateDTO.getNewPassword()));
             userRepository.save(foundUser);
@@ -124,6 +130,32 @@ public class UserService {
 
     public Optional<User> findEntityByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    public void validatePassword(String password, String username) {
+        if (password.equalsIgnoreCase(username)) {
+            throw new WeakPasswordException("Password cannot be equals the username.");
+        }
+
+        if (password.length() < 8) {
+            throw new WeakPasswordException("Password must be longer than 8 characters.");
+        }
+
+        if (!password.matches(".*[a-z].*")) {
+            throw new WeakPasswordException("Password must contain at least one lowercase letter.");
+        }
+
+        if (!password.matches(".*[A-Z].*")) {
+            throw new WeakPasswordException("Password must contain at least one uppercase letter.");
+        }
+
+        if (!password.matches(".*[0-9].*")) {
+            throw new WeakPasswordException("Password must contain at least one number between 0-9.");
+        }
+
+        if (!password.matches(".*[^a-zA-Z0-9].*")) {
+            throw new WeakPasswordException("Password must contain at least one special character.");
+        }
     }
 
 }
