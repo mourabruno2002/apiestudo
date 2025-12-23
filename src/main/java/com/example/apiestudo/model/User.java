@@ -1,10 +1,12 @@
 package com.example.apiestudo.model;
 
+import com.example.apiestudo.enums.UserRole;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.lang.annotation.ElementType;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -24,7 +26,8 @@ public class User implements UserDetails {
 
     private String password;
 
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 
     private String system;
 
@@ -38,7 +41,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + role));
+        return List.of(new SimpleGrantedAuthority(role.getAuthorities()));
     }
 
     @Override
@@ -81,7 +84,7 @@ public class User implements UserDetails {
         return password;
     }
 
-    public String getRole() {
+    public UserRole getRole() {
         return role;
     }
 
@@ -115,7 +118,7 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public void setRole(String role) {
+    public void setRole(UserRole role) {
         this.role = role;
     }
 

@@ -1,20 +1,22 @@
 package com.example.apiestudo.service;
 
+import com.example.apiestudo.dto.auth.UserRoleDTO;
 import com.example.apiestudo.dto.user.PasswordUpdateDTO;
 import com.example.apiestudo.dto.user.UserRequestDTO;
 import com.example.apiestudo.dto.user.UserResponseDTO;
 import com.example.apiestudo.dto.user.UserUpdateDTO;
-import com.example.apiestudo.exception.user.InvalidCurrentPasswordException;
-import com.example.apiestudo.exception.user.UserAlreadyExistsException;
-import com.example.apiestudo.exception.user.UserNotFoundException;
-import com.example.apiestudo.exception.user.WeakPasswordException;
+import com.example.apiestudo.enums.UserRole;
+import com.example.apiestudo.exception.user.*;
 import com.example.apiestudo.mapper.UserMapper;
 import com.example.apiestudo.model.User;
 import com.example.apiestudo.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import org.apache.coyote.BadRequestException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -46,7 +48,7 @@ public class UserService {
 
         validatePassword(userRequestDTO.getPassword(), userRequestDTO.getUsername());
         newUser.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
-        newUser.setRole("USER");
+        newUser.setRole(UserRole.USER);
 
         return userMapper.convertUserToResponse(userRepository.save(newUser));
     }
@@ -116,10 +118,30 @@ public class UserService {
     }
 
     @Transactional
+    public void updateRole(Long id, UserRoleDTO userRoleDTO) {
+        User foundUser = getUserById(id);
+
+        if (userRoleDTO.getRole() != foundUser.getRole()) {
+
+            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+                if (!Objects.equals(userDetails.getUsername(), foundUser.getUsername())) {
+                    foundUser.setRole(userRoleDTO.getRole());
+                } else {
+                    throw new SelfRoleChangeNotAllowedException("Admins cannot update their own roles.");
+                }
+        }
+
+        userRepository.save(foundUser);
+    }
+
+    @Transactional
     public void deleteById(Long id) {
 
         userRepository.deleteById(id);
     }
+
+
 
     // INTERNAL METHODS
     public User getUserById(Long id) {

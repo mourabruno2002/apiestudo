@@ -1,14 +1,13 @@
 package com.example.apiestudo.controller;
 
+import com.example.apiestudo.dto.auth.UserRoleDTO;
 import com.example.apiestudo.dto.user.PasswordUpdateDTO;
-import com.example.apiestudo.dto.user.UserRequestDTO;
 import com.example.apiestudo.dto.user.UserResponseDTO;
 import com.example.apiestudo.dto.user.UserUpdateDTO;
 import com.example.apiestudo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,11 +53,17 @@ public class UserController {
         return ResponseEntity.ok(userService.update(id, userUpdateDTO));
    }
 
-   @PatchMapping("/change-password/{id}")
-    public ResponseEntity<Void> changePassword(@Valid @PathVariable Long id, @RequestBody PasswordUpdateDTO passwordUpdateDTO) {
+   @PatchMapping("/{id}/update-password")
+    public ResponseEntity<Void> updatePassword(@Valid @PathVariable Long id, @RequestBody PasswordUpdateDTO passwordUpdateDTO) {
         userService.updatePassword(id, passwordUpdateDTO);
 
         return ResponseEntity.noContent().build();
    }
 
+   @PatchMapping("/{id}/update-role")
+    public ResponseEntity<Void> updateRole(@Valid @PathVariable Long id, @RequestBody UserRoleDTO userRoleDTO) {
+        userService.updateRole(id, userRoleDTO);
+
+        return ResponseEntity.noContent().build();
+   }
 }
