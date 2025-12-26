@@ -26,6 +26,10 @@ public class User implements UserDetails {
 
     private String password;
 
+    private String CPF;
+
+    private String phoneNumber;
+
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
@@ -84,6 +88,14 @@ public class User implements UserDetails {
         return password;
     }
 
+    public String getCPF() {
+        return CPF;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
     public UserRole getRole() {
         return role;
     }
@@ -116,6 +128,14 @@ public class User implements UserDetails {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setCPF(String CPF) {
+        this.CPF = CPF;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public void setRole(UserRole role) {

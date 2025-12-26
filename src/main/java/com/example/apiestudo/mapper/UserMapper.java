@@ -6,6 +6,7 @@ import com.example.apiestudo.dto.user.UserUpdateDTO;
 import com.example.apiestudo.model.User;
 import com.example.apiestudo.utils.EmailUtils;
 import com.example.apiestudo.utils.MapperUtils;
+import com.example.apiestudo.utils.PhoneNumberUtils;
 import org.springframework.stereotype.Component;
 
 import static com.example.apiestudo.utils.EmailUtils.maskEmail;
@@ -23,17 +24,16 @@ public class UserMapper {
         return mapperUtils.map(userRequestDTO, User.class);
     }
 
-    public User convertUpdateToUser(UserUpdateDTO userUpdateDTO) {
-        return mapperUtils.map(userUpdateDTO, User.class);
-    }
-
     public UserResponseDTO convertUserToResponse(User user) {
         return new UserResponseDTO(
                 user.getId(),
                 user.getName(),
                 EmailUtils.maskEmail(user.getUsername()),
+                user.getCPF(),
+                PhoneNumberUtils.maskPhone(user.getPhoneNumber()),
                 user.getRole(),
                 user.getSystem()
         );
     }
+
 }

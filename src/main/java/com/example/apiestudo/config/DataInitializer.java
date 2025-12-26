@@ -1,5 +1,6 @@
 package com.example.apiestudo.config;
 
+import com.example.apiestudo.enums.UserRole;
 import com.example.apiestudo.model.User;
 import com.example.apiestudo.repository.UserRepository;
 import com.example.apiestudo.service.UserService;
@@ -22,7 +23,7 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        Optional<User> userFounded = userRepository.findByEmail("admin@admin.com");
+        Optional<User> userFounded = userRepository.findByUsername("admin@admin.com");
 
         if (userFounded.isEmpty()) {
             User user = new User();
@@ -30,7 +31,7 @@ public class DataInitializer implements CommandLineRunner {
             user.setName("admin");
             user.setUsername("admin@admin.com");
             user.setPassword(passwordEncoder.encode("123456"));
-            user.setRole("ADMIN");
+            user.setRole(UserRole.ADMIN);
 
             userRepository.save(user);
             System.out.println("User admin created successfully.");

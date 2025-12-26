@@ -2,6 +2,7 @@ package com.example.apiestudo.controller;
 
 import com.example.apiestudo.dto.auth.LoginRequestDTO;
 import com.example.apiestudo.dto.auth.LoginResponseDTO;
+import com.example.apiestudo.dto.auth.RegisterRequestDTO;
 import com.example.apiestudo.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -24,5 +25,11 @@ public class AuthController {
     public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody LoginRequestDTO loginRequestDTO) {
 
         return ResponseEntity.ok(authService.login(loginRequestDTO));
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<Void> register(@Valid @RequestBody RegisterRequestDTO registerRequestDTO) {
+
+        return ResponseEntity.noContent().build();
     }
 }

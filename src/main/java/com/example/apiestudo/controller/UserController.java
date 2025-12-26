@@ -4,12 +4,16 @@ import com.example.apiestudo.dto.auth.UserRoleDTO;
 import com.example.apiestudo.dto.user.PasswordUpdateDTO;
 import com.example.apiestudo.dto.user.UserResponseDTO;
 import com.example.apiestudo.dto.user.UserUpdateDTO;
+import com.example.apiestudo.enums.UserRole;
 import com.example.apiestudo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import static org.springframework.security.authorization.AuthorityAuthorizationManager.hasRole;
 
 @RestController
 @RequestMapping("/users")
@@ -21,6 +25,7 @@ public class UserController {
         this.userService = userService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<Page<UserResponseDTO>> getUsers(@RequestParam(required = false) String email ,Pageable pageable) {
         Page<UserResponseDTO> foundUsers;
@@ -34,12 +39,14 @@ public class UserController {
         return ResponseEntity.ok(foundUsers);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {
 
         return ResponseEntity.ok(userService.findById(id));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteById(id);
@@ -47,11 +54,11 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-   @PatchMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<UserResponseDTO> updateUser(@Valid @PathVariable Long id, @RequestBody UserUpdateDTO userUpdateDTO) {
 
         return ResponseEntity.ok(userService.update(id, userUpdateDTO));
-   }
+    }
 
    @PatchMapping("/{id}/update-password")
     public ResponseEntity<Void> updatePassword(@Valid @PathVariable Long id, @RequestBody PasswordUpdateDTO passwordUpdateDTO) {
@@ -60,10 +67,11 @@ public class UserController {
         return ResponseEntity.noContent().build();
    }
 
-   @PatchMapping("/{id}/update-role")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/{id}/update-role")
     public ResponseEntity<Void> updateRole(@Valid @PathVariable Long id, @RequestBody UserRoleDTO userRoleDTO) {
         userService.updateRole(id, userRoleDTO);
 
         return ResponseEntity.noContent().build();
-   }
+    }
 }

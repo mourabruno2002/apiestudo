@@ -1,17 +1,13 @@
 package com.example.apiestudo.service;
 
 import com.example.apiestudo.dto.auth.UserRoleDTO;
-import com.example.apiestudo.dto.user.PasswordUpdateDTO;
-import com.example.apiestudo.dto.user.UserRequestDTO;
-import com.example.apiestudo.dto.user.UserResponseDTO;
-import com.example.apiestudo.dto.user.UserUpdateDTO;
+import com.example.apiestudo.dto.user.*;
 import com.example.apiestudo.enums.UserRole;
 import com.example.apiestudo.exception.user.*;
 import com.example.apiestudo.mapper.UserMapper;
 import com.example.apiestudo.model.User;
 import com.example.apiestudo.repository.UserRepository;
 import jakarta.transaction.Transactional;
-import org.apache.coyote.BadRequestException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -42,7 +38,7 @@ public class UserService {
     public UserResponseDTO create(UserRequestDTO userRequestDTO) {
         User newUser = userMapper.convertRequestToUser(userRequestDTO);
 
-        if (userRepository.findByEmail(newUser.getUsername()).isPresent()) {
+        if (userRepository.findByUsername(newUser.getUsername()).isPresent()) {
             throw new UserAlreadyExistsException(String.format("User with email %s already exists.", newUser.getUsername()));
         }
 
@@ -62,14 +58,14 @@ public class UserService {
     }
 
     public UserResponseDTO findByEmail(String email) {
-        return userRepository.findByEmail(email).map(userMapper::convertUserToResponse).orElseThrow(
+        return userRepository.findByUsername(email).map(userMapper::convertUserToResponse).orElseThrow(
                 () -> new UserNotFoundException(String.format("User with email %s not found.", email))
         );
     }
 
     public Page<UserResponseDTO> search(String email, Pageable pageable) {
 
-        Optional<User> foundUser = userRepository.findByEmail(email);
+        Optional<User> foundUser = userRepository.findByUsername(email);
         List<UserResponseDTO> list = new ArrayList<>();
 
         foundUser.ifPresent(User -> list.add(userMapper.convertUserToResponse(foundUser.get())));
@@ -89,7 +85,7 @@ public class UserService {
 
             if (!Objects.equals(userUpdateDTO.getEmail(), existing.getUsername())) {
 
-                if (userRepository.existsByEmailAndIdNot(userUpdateDTO.getEmail(), existing.getId())) {
+                if (userRepository.existsByUsernameAndIdNot(userUpdateDTO.getEmail(), existing.getId())) {
                     throw new UserAlreadyExistsException(String.format("User with email %s already exists.", userUpdateDTO.getEmail()));
 
                 } else {
@@ -151,32 +147,32 @@ public class UserService {
     }
 
     public Optional<User> findEntityByEmail(String email) {
-        return userRepository.findByEmail(email);
+        return userRepository.findByUsername(email);
     }
 
     public void validatePassword(String password, String username) {
         if (password.equalsIgnoreCase(username)) {
-            throw new WeakPasswordException("Password cannot be equals the username.");
+            throw new WeakPasswordException("Weak password. The provided password does not meet the minimum security requirements.");
         }
 
         if (password.length() < 8) {
-            throw new WeakPasswordException("Password must be longer than 8 characters.");
+            throw new WeakPasswordException("Weak password. The provided password does not meet the minimum security requirements.");
         }
 
         if (!password.matches(".*[a-z].*")) {
-            throw new WeakPasswordException("Password must contain at least one lowercase letter.");
+            throw new WeakPasswordException("Weak password. The provided password does not meet the minimum security requirements.");
         }
 
         if (!password.matches(".*[A-Z].*")) {
-            throw new WeakPasswordException("Password must contain at least one uppercase letter.");
+            throw new WeakPasswordException("Weak password. The provided password does not meet the minimum security requirements.");
         }
 
         if (!password.matches(".*[0-9].*")) {
-            throw new WeakPasswordException("Password must contain at least one number between 0-9.");
+            throw new WeakPasswordException("Weak password. The provided password does not meet the minimum security requirements.");
         }
 
         if (!password.matches(".*[^a-zA-Z0-9].*")) {
-            throw new WeakPasswordException("Password must contain at least one special character.");
+            throw new WeakPasswordException("Weak password. The provided password does not meet the minimum security requirements.");
         }
     }
 
