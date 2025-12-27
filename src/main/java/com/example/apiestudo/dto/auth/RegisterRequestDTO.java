@@ -2,7 +2,9 @@ package com.example.apiestudo.dto.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import org.hibernate.validator.constraints.br.CPF;
 
 public class RegisterRequestDTO {
 
@@ -18,8 +20,15 @@ public class RegisterRequestDTO {
     @Size(min = 6, message = "Password must be longer than 6 characters.")
     private String password;
 
-    //GETTER
+    @NotBlank(message = "CPF is required.")
+    @CPF(message = "Invalid CPF format.")
+    private String CPF;
 
+    @Pattern(regexp = "(^\\d{10,11}|\\(\\d{2}\\)\\s\\d{4,5}-\\d{4}$)", message = "Phone number format is invalid.")
+    @NotBlank(message = "Phone number is required.")
+    private String phoneNumber;
+
+    //GETTERS
     public String getName() {
         return name;
     }
@@ -30,5 +39,34 @@ public class RegisterRequestDTO {
 
     public String getPassword() {
         return password;
+    }
+
+    public String getCPF() {
+        return CPF;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    // SETTERS
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setCPF(String CPF) {
+        this.CPF = CPF;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }

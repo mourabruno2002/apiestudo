@@ -14,11 +14,10 @@ public class UserUpdateDTO {
     @Email(message = "Invalid email format.")
     private String email;
 
-    @CPF(message = "Invalid cpf format.")
+    @CPF(message = "Invalid CPF format.")
     private String CPF;
 
     @Pattern(regexp = "(^\\d{10,11}|\\(\\d{2}\\)\\s\\d{4,5}-\\d{4}$)", message = "Phone number format is invalid.")
-    @NotBlank(message = "Phone number is required.")
     private String phoneNumber;
 
     // GETTERS

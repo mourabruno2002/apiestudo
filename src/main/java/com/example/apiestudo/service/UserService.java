@@ -35,7 +35,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponseDTO create(UserRequestDTO userRequestDTO) {
+    public void create(UserRequestDTO userRequestDTO) {
         User newUser = userMapper.convertRequestToUser(userRequestDTO);
 
         if (userRepository.findByUsername(newUser.getUsername()).isPresent()) {
@@ -46,7 +46,7 @@ public class UserService {
         newUser.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
         newUser.setRole(UserRole.USER);
 
-        return userMapper.convertUserToResponse(userRepository.save(newUser));
+        userRepository.save(newUser);
     }
 
     public UserResponseDTO findById(Long id) {
