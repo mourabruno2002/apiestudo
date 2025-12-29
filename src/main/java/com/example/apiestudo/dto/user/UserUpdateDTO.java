@@ -1,7 +1,6 @@
 package com.example.apiestudo.dto.user;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.br.CPF;
@@ -15,7 +14,7 @@ public class UserUpdateDTO {
     private String email;
 
     @CPF(message = "Invalid CPF format.")
-    private String CPF;
+    private String cpf;
 
     @Pattern(regexp = "(^\\d{10,11}|\\(\\d{2}\\)\\s\\d{4,5}-\\d{4}$)", message = "Phone number format is invalid.")
     private String phoneNumber;
@@ -29,8 +28,8 @@ public class UserUpdateDTO {
         return email;
     }
 
-    public String getCPF() {
-        return CPF;
+    public String getCpf() {
+        return cpf;
     }
 
     public String getPhoneNumber() {
@@ -46,8 +45,8 @@ public class UserUpdateDTO {
         this.email = email;
     }
 
-    public void setCPF(String CPF) {
-        this.CPF = CPF;
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
     }
 
     public void setPhoneNumber(String phoneNumber) {

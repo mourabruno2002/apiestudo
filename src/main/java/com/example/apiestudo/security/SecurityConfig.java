@@ -1,8 +1,11 @@
 package com.example.apiestudo.security;
 
 import com.example.apiestudo.security.jwt.JwtAuthenticationFilter;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -24,7 +27,9 @@ public class SecurityConfig {
     private static final String[] PUBLIC_ROUTES = {
             "/auth/login",
             "/auth/register",
-            "/h2-console/**"
+            "/h2-console/**",
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
     };
 
     public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
@@ -43,7 +48,24 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(configurer -> configurer.requestMatchers(PUBLIC_ROUTES).permitAll().anyRequest().authenticated())
+                .authorizeHttpRequests(configurer -> configurer
+                        .requestMatchers(PUBLIC_ROUTES).permitAll()
+                        .requestMatchers(HttpMethod.GET, "/categories", "/categories/*").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/products", "/products/*").permitAll()
+                        .anyRequest().authenticated())
+                .exceptionHandling(configurer -> configurer
+                        .authenticationEntryPoint(((request, response, authException) -> {
+                            response.sendError(
+                                    HttpServletResponse.SC_UNAUTHORIZED,
+                                    "Unauthorized"
+                            );
+                        }))
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            response.sendError(
+                                    HttpServletResponse.SC_FORBIDDEN,
+                                    "Forbidden"
+                            );
+                        }))
                 .headers(configurer -> configurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 

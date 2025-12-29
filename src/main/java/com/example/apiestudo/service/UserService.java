@@ -45,6 +45,8 @@ public class UserService {
         validatePassword(userRequestDTO.getPassword(), userRequestDTO.getUsername());
         newUser.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
         newUser.setRole(UserRole.USER);
+        newUser.setActive(true);
+        newUser.setSystem("SYSTEM-V1");
 
         userRepository.save(newUser);
     }

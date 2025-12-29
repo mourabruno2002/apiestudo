@@ -9,7 +9,7 @@ public class UserResponseDTO {
 
     private final String email;
 
-    private final String CPF;
+    private final String cpf;
 
     private final String phoneNumber;
 
@@ -17,11 +17,11 @@ public class UserResponseDTO {
 
     private final String system;
 
-    public UserResponseDTO(Long id, String email, String name, String CPF, String phoneNumber, UserRole role, String system) {
+    public UserResponseDTO(Long id, String email, String name, String cpf, String phoneNumber, UserRole role, String system) {
         this.id = id;
         this.name = name;
         this.email = email;
-        this.CPF = CPF;
+        this.cpf = cpf;
         this.phoneNumber = phoneNumber;
         this.role = role;
         this.system = system;
@@ -40,8 +40,8 @@ public class UserResponseDTO {
         return email;
     }
 
-    public String getCPF() {
-        return CPF;
+    public String getCpf() {
+        return cpf;
     }
 
     public String getPhoneNumber() {

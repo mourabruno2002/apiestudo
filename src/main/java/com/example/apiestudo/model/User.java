@@ -2,11 +2,12 @@ package com.example.apiestudo.model;
 
 import com.example.apiestudo.enums.UserRole;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.lang.annotation.ElementType;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -26,7 +27,7 @@ public class User implements UserDetails {
 
     private String password;
 
-    private String CPF;
+    private String cpf;
 
     private String phoneNumber;
 
@@ -37,8 +38,10 @@ public class User implements UserDetails {
 
     private boolean active;
 
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
 
     public User() {}
@@ -88,8 +91,8 @@ public class User implements UserDetails {
         return password;
     }
 
-    public String getCPF() {
-        return CPF;
+    public String getCpf() {
+        return cpf;
     }
 
     public String getPhoneNumber() {
@@ -130,8 +133,8 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public void setCPF(String CPF) {
-        this.CPF = CPF;
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
     }
 
     public void setPhoneNumber(String phoneNumber) {

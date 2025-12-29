@@ -22,7 +22,7 @@ public class UserRequestDTO {
 
     @NotBlank(message = "CPF is required.")
     @CPF(message = "Invalid CPF format.")
-    private String CPF;
+    private String cpf;
 
     @Pattern(regexp = "(^\\d{10,11}|\\(\\d{2}\\)\\s\\d{4,5}-\\d{4}$)", message = "Phone number format is invalid.")
     @NotBlank(message = "Phone number is required.")
@@ -41,8 +41,8 @@ public class UserRequestDTO {
         return password;
     }
 
-    public String getCPF() {
-        return CPF;
+    public String getCpf() {
+        return cpf;
     }
 
     public String getPhoneNumber() {
@@ -62,8 +62,8 @@ public class UserRequestDTO {
         this.password = password;
     }
 
-    public void setCPF(String CPF) {
-        this.CPF = CPF;
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
     }
 
     public void setPhoneNumber(String phoneNumber) {

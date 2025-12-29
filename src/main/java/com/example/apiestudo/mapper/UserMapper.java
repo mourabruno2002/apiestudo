@@ -2,14 +2,11 @@ package com.example.apiestudo.mapper;
 
 import com.example.apiestudo.dto.user.UserRequestDTO;
 import com.example.apiestudo.dto.user.UserResponseDTO;
-import com.example.apiestudo.dto.user.UserUpdateDTO;
 import com.example.apiestudo.model.User;
 import com.example.apiestudo.utils.EmailUtils;
 import com.example.apiestudo.utils.MapperUtils;
 import com.example.apiestudo.utils.PhoneNumberUtils;
 import org.springframework.stereotype.Component;
-
-import static com.example.apiestudo.utils.EmailUtils.maskEmail;
 
 @Component
 public class UserMapper {
@@ -29,7 +26,7 @@ public class UserMapper {
                 user.getId(),
                 user.getName(),
                 EmailUtils.maskEmail(user.getUsername()),
-                user.getCPF(),
+                user.getCpf(),
                 PhoneNumberUtils.maskPhone(user.getPhoneNumber()),
                 user.getRole(),
                 user.getSystem()

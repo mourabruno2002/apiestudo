@@ -15,11 +15,14 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -96,6 +99,21 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(errorResponse.getStatus()).body(errorResponse);
     }
 
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAuthorizationDeniedException(AuthorizationDeniedException e, HttpServletRequest request) {
+        logger.warn("Access denied.", e);
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.FORBIDDEN.value(),
+                "FORBIDDEN",
+                "Access denied",
+                request.getRequestURI()
+        );
+
+        return ResponseEntity.status(errorResponse.getStatus()).body(errorResponse);
+    }
+
     @ExceptionHandler(InvalidTokenException.class)
     public ResponseEntity<ErrorResponse> handleInvalidTokenException(InvalidTokenException e, HttpServletRequest request) {
         logger.warn("Invalid token.", e);
@@ -105,6 +123,21 @@ public class GlobalExceptionHandler {
                 HttpStatus.UNAUTHORIZED.value(),
                 "UNAUTHORIZED",
                 "Invalid token.",
+                request.getRequestURI()
+        );
+
+        return ResponseEntity.status(errorResponse.getStatus()).body(errorResponse);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException e, HttpServletRequest request) {
+        logger.warn("Invalid username or password.", e);
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.UNAUTHORIZED.value(),
+                "UNAUTHORIZED",
+                "Invalid username or password",
                 request.getRequestURI()
         );
 
@@ -275,6 +308,7 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(errorResponse.getStatus()).body(errorResponse);
     }
+
 
 }
 
