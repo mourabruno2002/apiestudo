@@ -11,6 +11,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -51,6 +52,7 @@ public class UserService {
         userRepository.save(newUser);
     }
 
+    @PreAuthorize("hasHole('ADMIN') or #id == authentication.principal.id")
     public UserResponseDTO findById(Long id) {
         return userMapper.convertUserToResponse(getUserById(id));
     }
@@ -101,6 +103,7 @@ public class UserService {
         return userMapper.convertUserToResponse(existing);
     }
 
+
     @Transactional
     public void updatePassword(Long id, PasswordUpdateDTO passwordUpdateDTO) {
         User foundUser = getUserById(id);
@@ -133,6 +136,10 @@ public class UserService {
         userRepository.save(foundUser);
     }
 
+    @PreAuthorize(
+            "(hasRole('ADMIN') and #id != authentication.principal.id)" +
+            "or " +
+            "(hasRole('USER') and #id == authentication.principal.id)")
     @Transactional
     public void deleteById(Long id) {
 

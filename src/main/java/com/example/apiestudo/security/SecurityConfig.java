@@ -1,5 +1,6 @@
 package com.example.apiestudo.security;
 
+import com.example.apiestudo.enums.UserRole;
 import com.example.apiestudo.security.jwt.JwtAuthenticationFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -49,10 +50,24 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(configurer -> configurer
+
+                        .requestMatchers(HttpMethod.POST, "/products").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/categories").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/users").hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.PATCH, "/products/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/categories/**").hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.DELETE, "/products/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/categories/**").hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.GET, "/categories", "/categories/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/products", "/products/**").permitAll()
+
                         .requestMatchers(PUBLIC_ROUTES).permitAll()
-                        .requestMatchers(HttpMethod.GET, "/categories", "/categories/*").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/products", "/products/*").permitAll()
+
                         .anyRequest().authenticated())
+
                 .exceptionHandling(configurer -> configurer
                         .authenticationEntryPoint(((request, response, authException) -> {
                             response.sendError(

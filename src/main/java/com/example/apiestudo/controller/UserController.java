@@ -25,7 +25,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<Page<UserResponseDTO>> getUsers(@RequestParam(required = false) String email ,Pageable pageable) {
         Page<UserResponseDTO> foundUsers;
@@ -39,14 +38,12 @@ public class UserController {
         return ResponseEntity.ok(foundUsers);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {
 
         return ResponseEntity.ok(userService.findById(id));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteById(id);
@@ -67,7 +64,6 @@ public class UserController {
         return ResponseEntity.noContent().build();
    }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}/update-role")
     public ResponseEntity<Void> updateRole(@Valid @PathVariable Long id, @RequestBody UserRoleDTO userRoleDTO) {
         userService.updateRole(id, userRoleDTO);

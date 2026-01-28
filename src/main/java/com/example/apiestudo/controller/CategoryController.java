@@ -23,7 +23,6 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<CategoryResponseDTO> create(@Valid @RequestBody CategoryRequestDTO categoryRequestDTO) {
 
@@ -42,21 +41,18 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.findAll(pageable));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}")
     public ResponseEntity<CategoryResponseDTO> update(@PathVariable Long id, @Valid @RequestBody CategoryUpdateDTO categoryUpdateDTO) {
 
         return ResponseEntity.ok(categoryService.update(id, categoryUpdateDTO));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}/active")
     public ResponseEntity<CategoryResponseDTO> updateActive(@PathVariable Long id, @Valid @RequestBody CategoryActiveDTO categoryActiveDTO) {
 
         return ResponseEntity.ok(categoryService.updateActive(id, categoryActiveDTO));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         categoryService.deleteById(id);

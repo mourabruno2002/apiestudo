@@ -20,7 +20,6 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<ProductResponseDTO> create(@Valid @RequestBody ProductRequestDTO productRequestDTO) {
 
@@ -39,28 +38,24 @@ public class ProductController {
         return ResponseEntity.ok(productService.findAll(pageable));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}")
     public ResponseEntity<ProductResponseDTO> update(@PathVariable Long id, @RequestBody ProductUpdateDTO productUpdateDTO) {
 
         return ResponseEntity.ok(productService.update(id, productUpdateDTO));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}/active")
     public ResponseEntity<ProductResponseDTO> updateActive(@PathVariable Long id, @Valid @RequestBody ProductActiveDTO productActiveDTO) {
 
         return ResponseEntity.ok(productService.updateActive(id, productActiveDTO));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}/stock")
     public ResponseEntity<ProductResponseDTO> updateStock(@PathVariable Long id, @Valid @RequestBody ProductStockDTO productStockDTO) {
 
         return ResponseEntity.ok(productService.updateStock(id, productStockDTO));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         productService.deleteById(id);
