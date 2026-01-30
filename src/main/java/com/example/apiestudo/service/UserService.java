@@ -52,7 +52,7 @@ public class UserService {
         userRepository.save(newUser);
     }
 
-    @PreAuthorize("hasHole('ADMIN') or #id == authentication.principal.id")
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
     public UserResponseDTO findById(Long id) {
         return userMapper.convertUserToResponse(getUserById(id));
     }
@@ -61,22 +61,7 @@ public class UserService {
         return userRepository.findAll(pageable).map(userMapper::convertUserToResponse);
     }
 
-    public UserResponseDTO findByEmail(String email) {
-        return userRepository.findByUsername(email).map(userMapper::convertUserToResponse).orElseThrow(
-                () -> new UserNotFoundException(String.format("User with email %s not found.", email))
-        );
-    }
-
-    public Page<UserResponseDTO> search(String email, Pageable pageable) {
-
-        Optional<User> foundUser = userRepository.findByUsername(email);
-        List<UserResponseDTO> list = new ArrayList<>();
-
-        foundUser.ifPresent(User -> list.add(userMapper.convertUserToResponse(foundUser.get())));
-
-        return new PageImpl<>(list, pageable, list.size());
-    }
-
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
     @Transactional
     public UserResponseDTO update(Long id, UserUpdateDTO userUpdateDTO) {
         User existing = getUserById(id);
@@ -103,7 +88,7 @@ public class UserService {
         return userMapper.convertUserToResponse(existing);
     }
 
-
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
     @Transactional
     public void updatePassword(Long id, PasswordUpdateDTO passwordUpdateDTO) {
         User foundUser = getUserById(id);
@@ -118,6 +103,7 @@ public class UserService {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN') and #id != authentication.principal.id")
     @Transactional
     public void updateRole(Long id, UserRoleDTO userRoleDTO) {
         User foundUser = getUserById(id);
@@ -136,10 +122,7 @@ public class UserService {
         userRepository.save(foundUser);
     }
 
-    @PreAuthorize(
-            "(hasRole('ADMIN') and #id != authentication.principal.id)" +
-            "or " +
-            "(hasRole('USER') and #id == authentication.principal.id)")
+    @PreAuthorize("(hasRole('ADMIN') and #id != authentication.principal.id) or (hasRole('USER') and #id == authentication.principal.id)")
     @Transactional
     public void deleteById(Long id) {
 

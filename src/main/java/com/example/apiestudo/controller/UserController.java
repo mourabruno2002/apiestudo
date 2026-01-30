@@ -26,16 +26,9 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<UserResponseDTO>> getUsers(@RequestParam(required = false) String email ,Pageable pageable) {
-        Page<UserResponseDTO> foundUsers;
+    public ResponseEntity<Page<UserResponseDTO>> getUsers(Pageable pageable) {
 
-        if (email == null) {
-            foundUsers = userService.findAll(pageable);
-        } else {
-            foundUsers = userService.search(email, pageable);
-        }
-
-        return ResponseEntity.ok(foundUsers);
+        return ResponseEntity.ok(userService.findAll(pageable));
     }
 
     @GetMapping("/{id}")

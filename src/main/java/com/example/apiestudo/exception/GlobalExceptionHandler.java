@@ -114,21 +114,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(errorResponse.getStatus()).body(errorResponse);
     }
 
-    @ExceptionHandler(InvalidTokenException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidTokenException(InvalidTokenException e, HttpServletRequest request) {
-        logger.warn("Invalid token.", e);
-
-        ErrorResponse errorResponse = new ErrorResponse(
-                LocalDateTime.now(),
-                HttpStatus.UNAUTHORIZED.value(),
-                "UNAUTHORIZED",
-                "Invalid token.",
-                request.getRequestURI()
-        );
-
-        return ResponseEntity.status(errorResponse.getStatus()).body(errorResponse);
-    }
-
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException e, HttpServletRequest request) {
         logger.warn("Invalid username or password.", e);

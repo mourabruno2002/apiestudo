@@ -22,15 +22,20 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    @Value("${jwt.secret}")
-    private String secretKey;
+    private final JwtProperties jwtProperties;
+    private final SecretKey signingKey;
 
-    @Value("${jwt.expiration}")
-    private Long expiration;
+    public JwtService(JwtProperties jwtProperties) {
+        this.jwtProperties = jwtProperties;
+        this.signingKey = Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes());
+    }
 
-    //GETTER
-    public Long getExpiration() {
-        return expiration;
+    public String generateToken(UserDetails userDetails) {
+
+        Map<String, Object> claims = new HashMap<>();
+        String subject = userDetails.getUsername();
+
+        return buildToken(claims, subject);
     }
 
     public Claims extractAllClaims(String token) {
@@ -38,15 +43,9 @@ public class JwtService {
             throw new InvalidTokenException("Invalid token.");
         }
 
-        String jwtToken = token;
-
-        if (token.toLowerCase().startsWith("bearer ")) {
-            jwtToken = token.substring("bearer ".length()).trim();
-        }
-
         JwtParser parser = Jwts.parserBuilder().setSigningKey(getSigningKey()).build();
 
-        return parser.parseClaimsJws(jwtToken).getBody();
+        return parser.parseClaimsJws(token).getBody();
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> resolver) {
@@ -69,25 +68,15 @@ public class JwtService {
         return Objects.equals(subject, userDetails.getUsername());
     }
 
-    public String generateToken(UserDetails userDetails) {
-
-        Map<String, Object> claims = new HashMap<>();
-        String subject = userDetails.getUsername();
-
-        return buildToken(claims, subject);
-    }
-
     public Date getExpirationDate() {
 
-        return new Date(System.currentTimeMillis() + expiration);
+        return new Date(System.currentTimeMillis() + jwtProperties.getExpiration());
     }
 
-    // INTERNAL METHODS
+
+    //INTERNAL METHODS
     private SecretKey getSigningKey() {
-
-        byte[] keyBites = secretKey.getBytes();
-
-        return Keys.hmacShaKeyFor(keyBites);
+        return signingKey;
     }
 
     private String buildToken(Map<String, Object> claims, String subject) {
@@ -96,7 +85,7 @@ public class JwtService {
                 .setClaims(claims)
                 .setSubject(subject)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtProperties.getExpiration()))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
