@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import javax.security.sasl.AuthenticationException;
 import java.io.IOException;
 
 @Component
@@ -43,30 +44,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             String subject = jwtService.extractUsername(jwtToken);
 
-            if (subject == null || subject.isBlank()) {
-                filterChain.doFilter(request, response);
+            if (!jwtService.isTokenValid(jwtToken)) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
                 return;
             }
 
             UserDetails userDetails = userDetailsService.loadUserByUsername(subject);
 
-            if (!jwtService.isTokenValid(jwtToken, userDetails)) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-                return;
-            }
-        } catch (Exception e) {
+            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
+                    userDetails,
+                    null,
+                    userDetails.getAuthorities()
+            );
+
+            SecurityContextHolder.getContext().setAuthentication(auth);
+
+            filterChain.doFilter(request, response);
+        } catch (RuntimeException e) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
         }
-
-
-        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-                userDetails,
-                null,
-                userDetails.getAuthorities()
-        );
-
-        SecurityContextHolder.getContext().setAuthentication(auth);
-
-        filterChain.doFilter(request, response);
     }
 }

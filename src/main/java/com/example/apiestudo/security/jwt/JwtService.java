@@ -62,10 +62,14 @@ public class JwtService {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    public boolean isTokenValid(String token, UserDetails userDetails) {
-        String subject = extractUsername(token);
+    public boolean isTokenValid(String token) {
+        try {
+            extractAllClaims(token);
+            return true;
 
-        return Objects.equals(subject, userDetails.getUsername());
+        } catch (RuntimeException e) {
+            return false;
+        }
     }
 
     public Date getExpirationDate() {
