@@ -1,6 +1,8 @@
 package com.example.apiestudo.exception.jwt;
 
-public class InvalidTokenException extends RuntimeException {
+import io.jsonwebtoken.JwtException;
+
+public class InvalidTokenException extends JwtException {
     public InvalidTokenException(String message) {
         super(message);
     }

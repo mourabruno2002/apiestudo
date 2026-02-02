@@ -1,8 +1,6 @@
 package com.example.apiestudo.security;
 
-import com.example.apiestudo.enums.UserRole;
 import com.example.apiestudo.security.jwt.JwtAuthenticationFilter;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,7 +24,8 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     private static final String[] PUBLIC_ROUTES = {
-            "/auth/**",
+            "/auth/login",
+            "/auth/register",
             "/h2-console/**",
             "/swagger-ui/**",
             "/v3/api-docs/**",
@@ -49,39 +48,24 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(configurer -> configurer
-
-                        .requestMatchers(HttpMethod.POST, "/products").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/categories").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/users").hasRole("ADMIN")
-
-                        .requestMatchers(HttpMethod.PATCH, "/products/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PATCH, "/categories/**").hasRole("ADMIN")
-
-                        .requestMatchers(HttpMethod.DELETE, "/products/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/categories/**").hasRole("ADMIN")
-
-                        .requestMatchers(HttpMethod.GET, "/categories", "/categories/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/products", "/products/**").permitAll()
-
                         .requestMatchers(PUBLIC_ROUTES).permitAll()
-
+                        .requestMatchers(HttpMethod.GET, "/products/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/categories/**").permitAll()
                         .anyRequest().authenticated())
 
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(configurer -> configurer
                         .authenticationEntryPoint(((request, response, authException) -> {
                             response.sendError(
-                                    HttpServletResponse.SC_UNAUTHORIZED,
-                                    "Unauthorized"
+                                    HttpServletResponse.SC_UNAUTHORIZED
                             );
                         }))
                         .accessDeniedHandler((request, response, accessDeniedException) -> {
                             response.sendError(
-                                    HttpServletResponse.SC_FORBIDDEN,
-                                    "Forbidden"
+                                    HttpServletResponse.SC_FORBIDDEN
                             );
                         }))
-                .headers(configurer -> configurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .headers(configurer -> configurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
 
         return httpSecurity.build();
     }

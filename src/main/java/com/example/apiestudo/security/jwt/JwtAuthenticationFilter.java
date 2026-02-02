@@ -1,5 +1,6 @@
 package com.example.apiestudo.security.jwt;
 
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.security.sasl.AuthenticationException;
 import java.io.IOException;
 
 @Component
@@ -42,12 +42,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         try {
-            String subject = jwtService.extractUsername(jwtToken);
-
             if (!jwtService.isTokenValid(jwtToken)) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
                 return;
             }
+
+            String subject = jwtService.extractUsername(jwtToken);
 
             UserDetails userDetails = userDetailsService.loadUserByUsername(subject);
 
@@ -60,7 +60,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(auth);
 
             filterChain.doFilter(request, response);
-        } catch (RuntimeException e) {
+        } catch (JwtException e) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }

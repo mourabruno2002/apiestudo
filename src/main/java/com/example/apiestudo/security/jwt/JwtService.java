@@ -1,12 +1,8 @@
 package com.example.apiestudo.security.jwt;
 
 import com.example.apiestudo.exception.jwt.InvalidTokenException;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtParser;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +11,6 @@ import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Function;
 
 
@@ -67,7 +62,7 @@ public class JwtService {
             extractAllClaims(token);
             return true;
 
-        } catch (RuntimeException e) {
+        } catch (JwtException e) {
             return false;
         }
     }

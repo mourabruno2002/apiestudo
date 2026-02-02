@@ -57,6 +57,7 @@ public class UserService {
         return userMapper.convertUserToResponse(getUserById(id));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public Page<UserResponseDTO> findAll(Pageable pageable) {
         return userRepository.findAll(pageable).map(userMapper::convertUserToResponse);
     }
