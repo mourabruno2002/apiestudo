@@ -109,16 +109,7 @@ public class UserService {
     public void updateRole(Long id, UserRoleDTO userRoleDTO) {
         User foundUser = getUserById(id);
 
-        if (userRoleDTO.getRole() != foundUser.getRole()) {
-
-            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-                if (!Objects.equals(userDetails.getUsername(), foundUser.getUsername())) {
-                    foundUser.setRole(userRoleDTO.getRole());
-                } else {
-                    throw new SelfRoleChangeNotAllowedException("Admins cannot update their own roles.");
-                }
-        }
+        foundUser.setRole(userRoleDTO.getRole());
 
         userRepository.save(foundUser);
     }
@@ -126,6 +117,7 @@ public class UserService {
     @PreAuthorize("(hasRole('ADMIN') and #id != authentication.principal.id) or (hasRole('USER') and #id == authentication.principal.id)")
     @Transactional
     public void deleteById(Long id) {
+        getUserById(id);
 
         userRepository.deleteById(id);
     }
