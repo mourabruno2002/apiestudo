@@ -28,6 +28,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private static final String WEAK_PASSWORD_MESSAGE = "Weak password. The provided password does not meet the minimum security requirements.";
 
     public UserService(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -137,27 +138,27 @@ public class UserService {
 
     public void validatePassword(String password, String username) {
         if (password.equalsIgnoreCase(username)) {
-            throw new WeakPasswordException("Weak password. The provided password does not meet the minimum security requirements.");
+            throw new WeakPasswordException(WEAK_PASSWORD_MESSAGE);
         }
 
         if (password.length() < 8) {
-            throw new WeakPasswordException("Weak password. The provided password does not meet the minimum security requirements.");
+            throw new WeakPasswordException(WEAK_PASSWORD_MESSAGE);
         }
 
         if (!password.matches(".*[a-z].*")) {
-            throw new WeakPasswordException("Weak password. The provided password does not meet the minimum security requirements.");
+            throw new WeakPasswordException(WEAK_PASSWORD_MESSAGE);
         }
 
         if (!password.matches(".*[A-Z].*")) {
-            throw new WeakPasswordException("Weak password. The provided password does not meet the minimum security requirements.");
+            throw new WeakPasswordException(WEAK_PASSWORD_MESSAGE);
         }
 
         if (!password.matches(".*[0-9].*")) {
-            throw new WeakPasswordException("Weak password. The provided password does not meet the minimum security requirements.");
+            throw new WeakPasswordException(WEAK_PASSWORD_MESSAGE);
         }
 
         if (!password.matches(".*[^a-zA-Z0-9].*")) {
-            throw new WeakPasswordException("Weak password. The provided password does not meet the minimum security requirements.");
+            throw new WeakPasswordException(WEAK_PASSWORD_MESSAGE);
         }
     }
 
