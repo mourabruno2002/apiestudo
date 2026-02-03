@@ -13,6 +13,7 @@ import com.example.apiestudo.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -30,6 +31,7 @@ public class ProductService {
         this.categoryRepository = categoryRepository;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public ProductResponseDTO create(ProductRequestDTO productRequestDTO) {
         if (productRepository.existsBySku(productRequestDTO.getSku())) {
@@ -45,11 +47,8 @@ public class ProductService {
     }
 
     public ProductResponseDTO findById(Long id) {
-        Product product = productRepository.findById(id).orElseThrow(
-                () -> new ProductNotFoundException("Product not found.")
-        );
 
-        return productMapper.convertProductToResponse(product);
+        return productMapper.convertProductToResponse(getById(id));
     }
 
     public Page<ProductResponseDTO> findAll(Pageable pageable) {
@@ -57,6 +56,7 @@ public class ProductService {
         return productRepository.findAll(pageable).map(productMapper::convertProductToResponse);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public ProductResponseDTO update(Long id, ProductUpdateDTO productUpdateDTO) {
         Product product = getById(id);
@@ -64,12 +64,15 @@ public class ProductService {
         if (productUpdateDTO.getName() != null) {
             product.setName(productUpdateDTO.getName());
         }
+
         if (productUpdateDTO.getDescription() != null) {
             product.setDescription(productUpdateDTO.getDescription());
         }
+
         if (productUpdateDTO.getPrice() != null) {
             product.setPrice(productUpdateDTO.getPrice());
         }
+
         if (productUpdateDTO.getImageUrl() != null) {
             product.setImageUrl(productUpdateDTO.getImageUrl());
         }
@@ -94,6 +97,7 @@ public class ProductService {
         return productMapper.convertProductToResponse(productRepository.save(product));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public ProductResponseDTO updateActive(Long id, ProductActiveDTO productActiveDTO) {
         Product product = getById(id);
@@ -103,19 +107,17 @@ public class ProductService {
         return productMapper.convertProductToResponse(productRepository.save(product));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public ProductResponseDTO updateStock(Long id, ProductStockDTO productStockDTO) {
         Product product = getById(id);
-
-        if (productStockDTO.getStockQuantity() < 0) {
-            throw new FieldInvalidException("The field 'stockQuantity' cannot be negative.");
-        }
 
         product.setStockQuantity(productStockDTO.getStockQuantity());
 
         return productMapper.convertProductToResponse(productRepository.save(product));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public void deleteById(Long id) {
         getById(id);
