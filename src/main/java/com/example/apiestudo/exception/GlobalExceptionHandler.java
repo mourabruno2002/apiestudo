@@ -21,7 +21,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
         logger.error("Data integrity violation.", e);
 
         ErrorResponse errorResponse = new ErrorResponse(
-                LocalDateTime.now(),
+                Instant.now(),
                 HttpStatus.CONFLICT.value(),
                 "CONFLICT",
                 "Data integrity violation.",
@@ -55,7 +55,7 @@ public class GlobalExceptionHandler {
                 .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage, (msg1, msg2) -> msg1));
 
         ErrorResponse errorResponse = new ErrorResponse(
-                LocalDateTime.now(),
+                Instant.now(),
                 HttpStatus.BAD_REQUEST.value(),
                 "BAD_REQUEST",
                 "Invalid fields.",
@@ -72,7 +72,7 @@ public class GlobalExceptionHandler {
         logger.warn("Malformed JSON request.", e);
 
         ErrorResponse errorResponse = new ErrorResponse(
-                LocalDateTime.now(),
+                Instant.now(),
                 HttpStatus.BAD_REQUEST.value(),
                 "BAD_REQUEST",
                 "Malformed JSON request.",
@@ -87,7 +87,7 @@ public class GlobalExceptionHandler {
         logger.warn("Access denied.", e);
 
         ErrorResponse errorResponse = new ErrorResponse(
-                LocalDateTime.now(),
+                Instant.now(),
                 HttpStatus.FORBIDDEN.value(),
                 "FORBIDDEN",
                 "Access denied",
@@ -102,7 +102,7 @@ public class GlobalExceptionHandler {
         logger.warn("Invalid username or password.", e);
 
         ErrorResponse errorResponse = new ErrorResponse(
-                LocalDateTime.now(),
+                Instant.now(),
                 HttpStatus.UNAUTHORIZED.value(),
                 "UNAUTHORIZED",
                 "Invalid username or password",
@@ -117,7 +117,7 @@ public class GlobalExceptionHandler {
         logger.warn("User not found.", e);
 
         ErrorResponse errorResponse = new ErrorResponse(
-                LocalDateTime.now(),
+                Instant.now(),
                 HttpStatus.NOT_FOUND.value(),
                 "NOT_FOUND",
                 e.getMessage(),
@@ -132,7 +132,7 @@ public class GlobalExceptionHandler {
         logger.warn("User already exists.", e);
 
         ErrorResponse errorResponse = new ErrorResponse(
-                LocalDateTime.now(),
+                Instant.now(),
                 HttpStatus.CONFLICT.value(),
                 "CONFLICT",
                 e.getMessage(),
@@ -147,7 +147,7 @@ public class GlobalExceptionHandler {
         logger.warn("Weak password. The provided password does not meet the minimum security requirements.");
 
         ErrorResponse errorResponse = new ErrorResponse(
-                LocalDateTime.now(),
+                Instant.now(),
                 HttpStatus.BAD_REQUEST.value(),
                 "BAD_REQUEST",
                 e.getMessage(),
@@ -162,7 +162,7 @@ public class GlobalExceptionHandler {
         logger.warn("Invalid current password.", e);
 
         ErrorResponse errorResponse = new ErrorResponse(
-                LocalDateTime.now(),
+                Instant.now(),
                 HttpStatus.BAD_REQUEST.value(),
                 "BAD_REQUEST",
                 e.getMessage(),
@@ -177,7 +177,7 @@ public class GlobalExceptionHandler {
         logger.warn("Admins cannot update their own roles.", e);
 
         ErrorResponse errorResponse = new ErrorResponse(
-                LocalDateTime.now(),
+                Instant.now(),
                 HttpStatus.BAD_REQUEST.value(),
                 "BAD_REQUEST",
                 e.getMessage(),
@@ -192,7 +192,7 @@ public class GlobalExceptionHandler {
         logger.warn("Category already exists.", e);
 
         ErrorResponse errorResponse = new ErrorResponse(
-                LocalDateTime.now(),
+                Instant.now(),
                 HttpStatus.CONFLICT.value(),
                 "CONFLICT",
                 e.getMessage(),
@@ -207,7 +207,7 @@ public class GlobalExceptionHandler {
         logger.warn("Category not found.");
 
         ErrorResponse errorResponse = new ErrorResponse(
-                LocalDateTime.now(),
+                Instant.now(),
                 HttpStatus.NOT_FOUND.value(),
                 "NOT_FOUND",
                 e.getMessage(),
@@ -222,7 +222,7 @@ public class GlobalExceptionHandler {
         logger.warn("Invalid field.", e);
 
         ErrorResponse errorResponse = new ErrorResponse(
-                LocalDateTime.now(),
+                Instant.now(),
                 HttpStatus.BAD_REQUEST.value(),
                 "BAD_REQUEST",
                 e.getMessage(),
@@ -237,7 +237,7 @@ public class GlobalExceptionHandler {
         logger.warn("Product already exists.", e);
 
         ErrorResponse errorResponse = new ErrorResponse(
-                LocalDateTime.now(),
+                Instant.now(),
                 HttpStatus.CONFLICT.value(),
                 "CONFLICT",
                 e.getMessage(),
@@ -252,7 +252,7 @@ public class GlobalExceptionHandler {
         logger.warn("Product not found.", e);
 
         ErrorResponse errorResponse = new ErrorResponse(
-                LocalDateTime.now(),
+                Instant.now(),
                 HttpStatus.NOT_FOUND.value(),
                 "NOT_FOUND",
                 e.getMessage(),
@@ -267,7 +267,7 @@ public class GlobalExceptionHandler {
         logger.warn("Duplicate SKU.", e);
 
         ErrorResponse errorResponse = new ErrorResponse(
-                LocalDateTime.now(),
+                Instant.now(),
                 HttpStatus.CONFLICT.value(),
                 "CONFLICT",
                 e.getMessage(),
@@ -282,7 +282,7 @@ public class GlobalExceptionHandler {
         logger.error("Internal server error.", e);
 
         ErrorResponse errorResponse = new ErrorResponse(
-                LocalDateTime.now(),
+                Instant.now(),
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "INTERNAL_SERVER_ERROR",
                 "Internal server error.",

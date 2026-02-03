@@ -4,17 +4,22 @@ import com.example.apiestudo.enums.UserRole;
 import com.example.apiestudo.model.User;
 import com.example.apiestudo.repository.UserRepository;
 import com.example.apiestudo.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+@ConfigurationProperties(prefix = "admin")
 @Component
 public class DataInitializer implements CommandLineRunner {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final Logger logger = LoggerFactory.getLogger(DataInitializer.class);
 
     public DataInitializer(UserService userService, PasswordEncoder passwordEncoder, UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -36,9 +41,9 @@ public class DataInitializer implements CommandLineRunner {
             user.setSystem("SYSTEM-V1");
 
             userRepository.save(user);
-            System.out.println("User admin created successfully.");
+            logger.info("User admin created successfully.");
         } else {
-            System.out.println("User admin already exists.");
+            logger.info("User admin already exists.");
         }
     }
 }

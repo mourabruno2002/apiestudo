@@ -1,18 +1,18 @@
 package com.example.apiestudo.exception;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Map;
 
 public class ErrorResponse {
 
-    private LocalDateTime timestamp;
+    private Instant timestamp;
     private int status;
     private String error;
     private String message;
     private String path;
     private Map<String, String> errors;
 
-    public ErrorResponse(LocalDateTime timestamp, int status, String error, String message, String path) {
+    public ErrorResponse(Instant timestamp, int status, String error, String message, String path) {
         this.timestamp = timestamp;
         this.status = status;
         this.error = error;
@@ -21,7 +21,7 @@ public class ErrorResponse {
     }
 
     // GETTERS
-    public LocalDateTime getTimestamp() {
+    public Instant getTimestamp() {
         return timestamp;
     }
 
@@ -47,7 +47,7 @@ public class ErrorResponse {
 
     // SETTERS
 
-    public void setTimestamp(LocalDateTime timestamp) {
+    public void setTimestamp(Instant timestamp) {
         this.timestamp = timestamp;
     }
 
