@@ -13,7 +13,7 @@ public class ProductActiveDTO {
     }
 
     // SETTER
-    public void setActive(boolean active) {
+    public void setActive(Boolean active) {
         this.active = active;
     }
 }

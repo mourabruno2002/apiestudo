@@ -14,7 +14,7 @@ public class ProductRequestDTO {
     private String description;
 
     @NotBlank(message = "SKU is required.")
-    @Size(max = 50, message = "SKU must be short than 50 characters.")
+    @Size(max = 50, message = "SKU must be shorter than 50 characters.")
     private String sku;
 
     @NotNull(message = "Price is required.")

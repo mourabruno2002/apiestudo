@@ -6,6 +6,9 @@ import com.example.apiestudo.model.Product;
 import com.example.apiestudo.utils.MapperUtils;
 import org.springframework.stereotype.Component;
 
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+
 @Component
 public class ProductMapper {
 
@@ -31,8 +34,8 @@ public class ProductMapper {
                 product.getImageUrl(),
                 product.getCategory().getId(),
                 product.getCategory().getName(),
-                product.getCreatedAt(),
-                product.getUpdatedAt()
+                product.getCreatedAt().atZone(ZoneOffset.UTC).toInstant(),
+                product.getUpdatedAt().atZone(ZoneOffset.UTC).toInstant()
         );
     }
 }

@@ -1,7 +1,6 @@
 package com.example.apiestudo.dto.category;
 
-import com.example.apiestudo.repository.CategoryRepository;
-
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 public class CategoryResponseDTO {
@@ -13,11 +12,11 @@ public class CategoryResponseDTO {
 
     private final boolean active;
 
-    private final LocalDateTime createdAt;
+    private final Instant createdAt;
 
-    private final LocalDateTime updatedAt;
+    private final Instant updatedAt;
 
-    public CategoryResponseDTO(Long id, String name, String description, boolean active, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public CategoryResponseDTO(Long id, String name, String description, boolean active, Instant createdAt, Instant updatedAt) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -44,11 +43,11 @@ public class CategoryResponseDTO {
         return active;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
+    public Instant getUpdatedAt() {
         return updatedAt;
     }
 }

@@ -17,7 +17,7 @@ public class UserRequestDTO {
     private String username;
 
     @NotBlank(message = "Password is required.")
-    @Size(min = 6, message = "Password must contain at least 6 characters.")
+    @Size(min = 8, message = "Password must contain at least 6 characters.")
     private String password;
 
     @NotBlank(message = "CPF is required.")

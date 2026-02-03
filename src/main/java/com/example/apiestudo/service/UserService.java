@@ -1,6 +1,6 @@
 package com.example.apiestudo.service;
 
-import com.example.apiestudo.dto.auth.UserRoleDTO;
+import com.example.apiestudo.dto.auth.UserRoleUpdateDTO;
 import com.example.apiestudo.dto.user.*;
 import com.example.apiestudo.enums.UserRole;
 import com.example.apiestudo.exception.user.*;
@@ -9,16 +9,11 @@ import com.example.apiestudo.model.User;
 import com.example.apiestudo.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -107,10 +102,10 @@ public class UserService {
 
     @PreAuthorize("hasRole('ADMIN') and #id != authentication.principal.id")
     @Transactional
-    public void updateRole(Long id, UserRoleDTO userRoleDTO) {
+    public void updateRole(Long id, UserRoleUpdateDTO userRoleUpdateDTO) {
         User foundUser = getUserById(id);
 
-        foundUser.setRole(userRoleDTO.getRole());
+        foundUser.setRole(userRoleUpdateDTO.getRole());
 
         userRepository.save(foundUser);
     }

@@ -1,7 +1,7 @@
 package com.example.apiestudo.dto.product;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public class ProductResponseDTO {
 
@@ -15,11 +15,11 @@ public class ProductResponseDTO {
     private final String imageUrl;
     private final Long categoryId;
     private final String categoryName;
-    private final LocalDateTime createdAt;
-    private final LocalDateTime updatedAt;
+    private final Instant createdAt;
+    private final Instant updatedAt;
 
     public ProductResponseDTO(Long id, String name, String description, String sku, BigDecimal price, int stockQuantity,
-                              boolean active, String imageUrl, Long categoryId, String categoryName, LocalDateTime createdAt, LocalDateTime updatedAt) {
+                              boolean active, String imageUrl, Long categoryId, String categoryName, Instant createdAt, Instant updatedAt) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -75,11 +75,11 @@ public class ProductResponseDTO {
         return categoryName;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
+    public Instant getUpdatedAt() {
         return updatedAt;
     }
 }

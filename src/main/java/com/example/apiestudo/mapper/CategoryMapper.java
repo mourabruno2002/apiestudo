@@ -6,6 +6,8 @@ import com.example.apiestudo.model.Category;
 import com.example.apiestudo.utils.MapperUtils;
 import org.springframework.stereotype.Component;
 
+import java.time.ZoneOffset;
+
 @Component
 public class CategoryMapper {
 
@@ -26,8 +28,8 @@ public class CategoryMapper {
                 category.getName(),
                 category.getDescription(),
                 category.isActive(),
-                category.getCreatedAt(),
-                category.getUpdatedAt()
+                category.getCreatedAt().atZone(ZoneOffset.UTC).toInstant(),
+                category.getUpdatedAt().atZone(ZoneOffset.UTC).toInstant()
         );
     }
 }

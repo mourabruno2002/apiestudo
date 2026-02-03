@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 
 public class ProductUpdateDTO {
 
-    @Size(max = 100, message = "Name must be shoter than 100 characters long.")
+    @Size(max = 100, message = "Name must be shorter than 100 characters long.")
     private String name;
 
     @Size(max = 255, message = "Description must be shorter than 255 characters.")

@@ -40,7 +40,7 @@ public class AuthService {
 
         String token = jwtService.generateToken(userDetails);
 
-        return new LoginResponseDTO(token, jwtService.getExpirationDate());
+        return new LoginResponseDTO(token, jwtService.getExpirationDate().toInstant());
     }
 
     public void register(RegisterRequestDTO registerRequestDTO) {

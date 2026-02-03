@@ -107,10 +107,6 @@ public class ProductService {
     public ProductResponseDTO updateStock(Long id, ProductStockDTO productStockDTO) {
         Product product = getById(id);
 
-        if (productStockDTO.getStockQuantity() < 0) {
-            throw new FieldInvalidException("The field 'stockQuantity' cannot be negative.");
-        }
-
         product.setStockQuantity(productStockDTO.getStockQuantity());
 
         return productMapper.convertProductToResponse(productRepository.save(product));

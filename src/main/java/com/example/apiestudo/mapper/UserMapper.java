@@ -8,6 +8,8 @@ import com.example.apiestudo.utils.MapperUtils;
 import com.example.apiestudo.utils.PhoneNumberUtils;
 import org.springframework.stereotype.Component;
 
+import java.time.ZoneOffset;
+
 @Component
 public class UserMapper {
 
@@ -29,7 +31,9 @@ public class UserMapper {
                 user.getCpf(),
                 PhoneNumberUtils.maskPhone(user.getPhoneNumber()),
                 user.getRole(),
-                user.getSystem()
+                user.getSystem(),
+                user.getCreatedAt().atZone(ZoneOffset.UTC).toInstant(),
+                user.getUpdatedAt().atZone(ZoneOffset.UTC).toInstant()
         );
     }
 

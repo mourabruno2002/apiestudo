@@ -6,10 +6,10 @@ import java.util.Date;
 public class LoginResponseDTO {
 
     private final String token;
-    private final Date expiresAt;
+    private final Instant expiresAt;
     private final String type;
 
-    public LoginResponseDTO(String token, Date expiresAt) {
+    public LoginResponseDTO(String token, Instant expiresAt) {
         this.token = token;
         this.expiresAt = expiresAt;
         this.type = "Bearer";
@@ -20,7 +20,7 @@ public class LoginResponseDTO {
         return token;
     }
 
-    public Date getExpiresAt() {
+    public Instant getExpiresAt() {
         return expiresAt;
     }
 

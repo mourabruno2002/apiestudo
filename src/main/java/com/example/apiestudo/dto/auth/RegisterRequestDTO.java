@@ -17,12 +17,12 @@ public class RegisterRequestDTO {
     private String username;
 
     @NotBlank(message = "Password is required.")
-    @Size(min = 6, message = "Password must be longer than 6 characters.")
+    @Size(min = 8, message = "Password must be longer than 8 characters.")
     private String password;
 
     @NotBlank(message = "CPF is required.")
     @CPF(message = "Invalid CPF format.")
-    private String CPF;
+    private String cpf;
 
     @Pattern(regexp = "(^\\d{10,11}|\\(\\d{2}\\)\\s\\d{4,5}-\\d{4}$)", message = "Phone number format is invalid.")
     @NotBlank(message = "Phone number is required.")
@@ -41,8 +41,8 @@ public class RegisterRequestDTO {
         return password;
     }
 
-    public String getCPF() {
-        return CPF;
+    public String getCpf() {
+        return cpf;
     }
 
     public String getPhoneNumber() {
@@ -62,8 +62,8 @@ public class RegisterRequestDTO {
         this.password = password;
     }
 
-    public void setCPF(String CPF) {
-        this.CPF = CPF;
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
     }
 
     public void setPhoneNumber(String phoneNumber) {

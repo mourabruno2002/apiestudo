@@ -3,7 +3,6 @@ package com.example.apiestudo.exception;
 import com.example.apiestudo.exception.category.CategoryAlreadyExistsException;
 import com.example.apiestudo.exception.category.CategoryNotFoundException;
 import com.example.apiestudo.exception.fieldErrors.FieldInvalidException;
-import com.example.apiestudo.exception.jwt.InvalidTokenException;
 import com.example.apiestudo.exception.product.DuplicateSkuException;
 import com.example.apiestudo.exception.product.ProductAlreadyExistsException;
 import com.example.apiestudo.exception.product.ProductNotFoundException;
@@ -22,7 +21,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -30,21 +28,6 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class GlobalExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleException(Exception e, HttpServletRequest request) {
-        logger.error("Internal server error.", e);
-
-        ErrorResponse errorResponse = new ErrorResponse(
-                LocalDateTime.now(),
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "INTERNAL_SERVER_ERROR",
-                "Internal server error.",
-                request.getRequestURI()
-        );
-
-        return ResponseEntity.status(errorResponse.getStatus()).body(errorResponse);
-    }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErrorResponse> handleDataIntegrityViolationException(DataIntegrityViolationException e, HttpServletRequest request) {
@@ -197,7 +180,7 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now(),
                 HttpStatus.BAD_REQUEST.value(),
                 "BAD_REQUEST",
-                "Admins cannot update their own roles.",
+                e.getMessage(),
                 request.getRequestURI()
         );
 
@@ -294,7 +277,20 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(errorResponse.getStatus()).body(errorResponse);
     }
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleException(Exception e, HttpServletRequest request) {
+        logger.error("Internal server error.", e);
 
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "INTERNAL_SERVER_ERROR",
+                "Internal server error.",
+                request.getRequestURI()
+        );
+
+        return ResponseEntity.status(errorResponse.getStatus()).body(errorResponse);
+    }
 }
 
 
