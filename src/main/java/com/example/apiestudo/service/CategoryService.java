@@ -12,6 +12,7 @@ import com.example.apiestudo.repository.CategoryRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import jakarta.transaction.Transactional;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -27,6 +28,7 @@ public class CategoryService {
         this.categoryMapper = categoryMapper;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public CategoryResponseDTO create(CategoryRequestDTO categoryRequestDTO) {
         if (categoryRepository.existsByName(categoryRequestDTO.getName())) {
@@ -51,16 +53,18 @@ public class CategoryService {
         return categoryRepository.findAll(pageable).map(categoryMapper::convertCategoryToResponse);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public CategoryResponseDTO update(Long id, CategoryUpdateDTO categoryUpdateDTO) {
         Category category = getById(id);
 
         if (categoryUpdateDTO.getName() != null) {
-            if (!Objects.equals(categoryUpdateDTO.getName(), category.getName()))
+            if (!Objects.equals(categoryUpdateDTO.getName(), category.getName())) {
 
                 if (categoryRepository.existsByNameAndIdNot(categoryUpdateDTO.getName(), id)) {
-                    throw new CategoryAlreadyExistsException("Category name already exists.");
+                    throw new CategoryAlreadyExistsException("A category with this name already exists.");
                 }
+            }
 
             category.setName(categoryUpdateDTO.getName());
         }
@@ -72,17 +76,17 @@ public class CategoryService {
         return categoryMapper.convertCategoryToResponse(categoryRepository.save(category));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public CategoryResponseDTO updateActive(Long id, CategoryActiveDTO categoryActiveDTO) {
         Category category = getById(id);
 
-        if (categoryActiveDTO.getActive() != null) {
-            category.setActive(categoryActiveDTO.getActive());
-        }
+        category.setActive(categoryActiveDTO.getActive());
 
         return categoryMapper.convertCategoryToResponse(categoryRepository.save(category));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public void deleteById(Long id) {
         getById(id);
