@@ -39,6 +39,10 @@ public class UserService {
             throw new UserAlreadyExistsException(String.format("User with email %s already exists.", newUser.getUsername()));
         }
 
+        if (userRepository.findByCpf(newUser.getCpf()).isPresent()) {
+            throw new UserAlreadyExistsException(String.format("User with CPF %s already exists.", newUser.getCpf()));
+        }
+
         validatePassword(userRequestDTO.getPassword(), userRequestDTO.getUsername());
         newUser.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
         newUser.setRole(UserRole.USER);
@@ -73,10 +77,12 @@ public class UserService {
 
                 if (userRepository.existsByUsernameAndIdNot(userUpdateDTO.getEmail(), existing.getId())) {
                     throw new UserAlreadyExistsException(String.format("User with email %s already exists.", userUpdateDTO.getEmail()));
-
-                } else {
-                    existing.setUsername(userUpdateDTO.getEmail());
                 }
+                if (userRepository.existsByCpfAndIdNot(userUpdateDTO.getCpf(), existing.getId())) {
+                    throw new UserAlreadyExistsException(String.format("User with CPF %s already exists.", userUpdateDTO.getCpf()));
+                }
+
+                existing.setUsername(userUpdateDTO.getEmail());
             }
         }
 

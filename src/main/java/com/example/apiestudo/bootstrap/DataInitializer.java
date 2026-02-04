@@ -29,10 +29,6 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        if (adminProperties.getUsername().isBlank() || adminProperties.getPassword().isBlank()) {
-            throw new IllegalStateException("Required admin environment variables are not set.");
-        }
-
         Optional<User> userFounded = userRepository.findByUsername(adminProperties.getUsername());
 
         if (userFounded.isEmpty()) {

@@ -34,7 +34,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        String jwtToken = authHeader.substring("bearer ".length()).trim();
+        String token = authHeader.substring("bearer ".length()).trim();
+
+        if (token.isBlank() || token.equalsIgnoreCase("null") || token.equalsIgnoreCase("undefined")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        String[] parts = token.split("\\.");
+
+        if (parts.length != 3) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         if (SecurityContextHolder.getContext().getAuthentication() != null) {
             filterChain.doFilter(request, response);
@@ -42,12 +54,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         try {
-            if (!jwtService.isTokenValid(jwtToken)) {
+            if (!jwtService.isTokenValid(token)) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
                 return;
             }
 
-            String subject = jwtService.extractUsername(jwtToken);
+            String subject = jwtService.extractUsername(token);
 
             UserDetails userDetails = userDetailsService.loadUserByUsername(subject);
 
@@ -62,7 +74,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } catch (JwtException e) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
         }
     }
 }

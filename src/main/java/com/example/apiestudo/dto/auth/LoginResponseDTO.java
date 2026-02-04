@@ -1,7 +1,6 @@
 package com.example.apiestudo.dto.auth;
 
 import java.time.Instant;
-import java.util.Date;
 
 public class LoginResponseDTO {
 
