@@ -1,5 +1,6 @@
 package com.example.apiestudo.security.jwt;
 
+import com.example.apiestudo.config.JwtProperties;
 import com.example.apiestudo.exception.jwt.InvalidTokenException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
