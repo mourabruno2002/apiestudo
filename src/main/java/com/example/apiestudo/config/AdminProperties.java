@@ -3,6 +3,7 @@ package com.example.apiestudo.config;
 import com.example.apiestudo.enums.UserRole;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
@@ -11,38 +12,31 @@ import org.springframework.validation.annotation.Validated;
 public class AdminProperties {
 
     @NotBlank
-    private String username;
+    private final String username;
 
     @NotBlank
-    private String password;
+    @Size(min = 8)
+    private final String password;
 
     @NotNull
-    private UserRole role;
+    private final UserRole role;
 
-    //GETTERS
-    public String getPassword() {
-        return password;
+    public AdminProperties(String username, String password, UserRole role) {
+        this.username = username;
+        this.password = password;
+        this.role = role;
     }
 
+    //GETTERS
     public String getUsername() {
         return username;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
     public UserRole getRole() {
         return role;
-    }
-
-    //SETTERS
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setRole(UserRole role) {
-        this.role = role;
     }
 }

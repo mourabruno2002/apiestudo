@@ -1,10 +1,15 @@
 package com.example.apiestudo.utils;
 
-public class PhoneNumberUtils {
+public final class PhoneNumberUtils {
 
-    public static String maskPhone(String phone) {
-        if (phone == null || phone.length() < 8) return phone;
+    private static final String MASK = "********";
 
-        return "********" + phone.substring(phone.length() -2);
+    private PhoneNumberUtils() {
+        throw new UnsupportedOperationException("Utility class.");
+    }
+
+    public static String maskPhoneNumber(String phoneNumber) {
+
+        return MASK + phoneNumber.substring(phoneNumber.length() -2);
     }
 }

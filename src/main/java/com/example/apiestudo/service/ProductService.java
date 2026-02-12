@@ -1,10 +1,9 @@
 package com.example.apiestudo.service;
 
 import com.example.apiestudo.dto.product.*;
-import com.example.apiestudo.exception.fieldErrors.FieldInvalidException;
-import com.example.apiestudo.exception.category.CategoryNotFoundException;
-import com.example.apiestudo.exception.product.DuplicateSkuException;
-import com.example.apiestudo.exception.product.ProductNotFoundException;
+import com.example.apiestudo.exception.domain.category.CategoryNotFoundException;
+import com.example.apiestudo.exception.domain.product.DuplicateSkuException;
+import com.example.apiestudo.exception.domain.product.ProductNotFoundException;
 import com.example.apiestudo.mapper.ProductMapper;
 import com.example.apiestudo.model.Category;
 import com.example.apiestudo.model.Product;

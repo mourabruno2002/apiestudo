@@ -3,23 +3,22 @@ package com.example.apiestudo.mapper;
 import com.example.apiestudo.dto.product.ProductRequestDTO;
 import com.example.apiestudo.dto.product.ProductResponseDTO;
 import com.example.apiestudo.model.Product;
-import com.example.apiestudo.utils.MapperUtils;
+import com.example.apiestudo.utils.MapperService;
 import org.springframework.stereotype.Component;
 
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 
 @Component
 public class ProductMapper {
 
-    private final MapperUtils mapperUtils;
+    private final MapperService mapperService;
 
-    public ProductMapper(MapperUtils mapperUtils) {
-        this.mapperUtils = mapperUtils;
+    public ProductMapper(MapperService mapperService) {
+        this.mapperService = mapperService;
     }
 
     public Product convertRequestToProduct(ProductRequestDTO productRequestDTO) {
-        return mapperUtils.map(productRequestDTO, Product.class);
+        return mapperService.map(productRequestDTO, Product.class);
     }
 
     public ProductResponseDTO convertProductToResponse(Product product) {

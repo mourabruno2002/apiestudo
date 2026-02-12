@@ -4,7 +4,7 @@ import com.example.apiestudo.dto.user.UserRequestDTO;
 import com.example.apiestudo.dto.user.UserResponseDTO;
 import com.example.apiestudo.model.User;
 import com.example.apiestudo.utils.EmailUtils;
-import com.example.apiestudo.utils.MapperUtils;
+import com.example.apiestudo.utils.MapperService;
 import com.example.apiestudo.utils.PhoneNumberUtils;
 import org.springframework.stereotype.Component;
 
@@ -13,14 +13,14 @@ import java.time.ZoneOffset;
 @Component
 public class UserMapper {
 
-    private final MapperUtils mapperUtils;
+    private final MapperService mapperService;
 
-    public UserMapper(MapperUtils mapperUtils) {
-        this.mapperUtils = mapperUtils;
+    public UserMapper(MapperService mapperService) {
+        this.mapperService = mapperService;
     }
 
     public User convertRequestToUser(UserRequestDTO userRequestDTO) {
-        return mapperUtils.map(userRequestDTO, User.class);
+        return mapperService.map(userRequestDTO, User.class);
     }
 
     public UserResponseDTO convertUserToResponse(User user) {
@@ -29,7 +29,7 @@ public class UserMapper {
                 user.getName(),
                 EmailUtils.maskEmail(user.getUsername()),
                 user.getCpf(),
-                PhoneNumberUtils.maskPhone(user.getPhoneNumber()),
+                PhoneNumberUtils.maskPhoneNumber(user.getPhoneNumber()),
                 user.getRole(),
                 user.getSystem(),
                 user.getCreatedAt().atZone(ZoneOffset.UTC).toInstant(),

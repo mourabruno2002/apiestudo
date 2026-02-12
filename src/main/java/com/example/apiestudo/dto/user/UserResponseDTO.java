@@ -23,7 +23,7 @@ public class UserResponseDTO {
 
     private final Instant updatedAt;
 
-    public UserResponseDTO(Long id, String email, String name, String cpf, String phoneNumber, UserRole role, String system, Instant createdAt, Instant updatedAt) {
+    public UserResponseDTO(Long id, String name, String email, String cpf, String phoneNumber, UserRole role, String system, Instant createdAt, Instant updatedAt) {
         this.id = id;
         this.name = name;
         this.email = email;

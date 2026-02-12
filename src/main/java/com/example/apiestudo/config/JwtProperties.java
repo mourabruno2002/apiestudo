@@ -1,20 +1,26 @@
 package com.example.apiestudo.config;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
-
 
 @ConfigurationProperties(prefix = "jwt")
 @Validated
 public class JwtProperties {
 
     @NotBlank
-    private String secret;
+    private final String secret;
 
     @NotNull
-    private Long expiration;
+    @Min(1)
+    private final Long expiration;
+
+    public JwtProperties(String secret, Long expiration) {
+        this.secret = secret;
+        this.expiration = expiration;
+    }
 
     //GETTERS
     public String getSecret() {
@@ -23,14 +29,5 @@ public class JwtProperties {
 
     public Long getExpiration() {
         return expiration;
-    }
-
-    //SETTER
-    public void setSecret(String secret) {
-        this.secret = secret;
-    }
-
-    public void setExpiration(Long expiration) {
-        this.expiration = expiration;
     }
 }

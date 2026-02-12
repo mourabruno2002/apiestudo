@@ -2,19 +2,19 @@ package com.example.apiestudo.mapper;
 
 import com.example.apiestudo.dto.auth.RegisterRequestDTO;
 import com.example.apiestudo.dto.user.UserRequestDTO;
-import com.example.apiestudo.utils.MapperUtils;
+import com.example.apiestudo.utils.MapperService;
 import org.springframework.stereotype.Component;
 
 @Component
 public class AuthMapper {
 
-    private final MapperUtils mapperUtils;
+    private final MapperService mapperService;
 
-    public AuthMapper(MapperUtils mapperUtils) {
-        this.mapperUtils = mapperUtils;
+    public AuthMapper(MapperService mapperService) {
+        this.mapperService = mapperService;
     }
 
     public UserRequestDTO convertRegisterRequestToUserRequest(RegisterRequestDTO registerRequestDTO) {
-        return mapperUtils.map(registerRequestDTO, UserRequestDTO.class);
+        return mapperService.map(registerRequestDTO, UserRequestDTO.class);
     }
 }

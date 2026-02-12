@@ -1,7 +1,6 @@
 package com.example.apiestudo.dto.auth;
 
 import com.example.apiestudo.enums.UserRole;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public class UserRoleUpdateDTO {
