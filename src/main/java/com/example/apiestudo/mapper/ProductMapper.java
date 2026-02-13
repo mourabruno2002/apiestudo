@@ -3,7 +3,7 @@ package com.example.apiestudo.mapper;
 import com.example.apiestudo.dto.product.ProductRequestDTO;
 import com.example.apiestudo.dto.product.ProductResponseDTO;
 import com.example.apiestudo.model.Product;
-import com.example.apiestudo.utils.MapperService;
+import com.example.apiestudo.service.MapperService;
 import org.springframework.stereotype.Component;
 
 import java.time.ZoneOffset;

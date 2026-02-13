@@ -2,7 +2,7 @@ package com.example.apiestudo.mapper;
 
 import com.example.apiestudo.dto.auth.RegisterRequestDTO;
 import com.example.apiestudo.dto.user.UserRequestDTO;
-import com.example.apiestudo.utils.MapperService;
+import com.example.apiestudo.service.MapperService;
 import org.springframework.stereotype.Component;
 
 @Component

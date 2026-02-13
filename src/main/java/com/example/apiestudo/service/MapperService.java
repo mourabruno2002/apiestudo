@@ -1,4 +1,4 @@
-package com.example.apiestudo.utils;
+package com.example.apiestudo.service;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
