@@ -30,6 +30,8 @@ public class SecurityConfig {
 
     public static final String[] PUBLIC_ROUTES = {
             "/swagger-ui/index.html",
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
             "/h2-console/**"
     };
 
@@ -41,6 +43,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
+                .headers(configurer -> configurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/products/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/categories/**").permitAll()

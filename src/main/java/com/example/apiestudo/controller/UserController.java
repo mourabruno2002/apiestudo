@@ -2,6 +2,7 @@ package com.example.apiestudo.controller;
 
 import com.example.apiestudo.dto.auth.UserRoleUpdateDTO;
 import com.example.apiestudo.dto.user.PasswordUpdateDTO;
+import com.example.apiestudo.dto.user.UserFilterDTO;
 import com.example.apiestudo.dto.user.UserResponseDTO;
 import com.example.apiestudo.dto.user.UserUpdateDTO;
 import com.example.apiestudo.service.UserService;
@@ -21,10 +22,11 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping
-    public ResponseEntity<Page<UserResponseDTO>> getUsers(Pageable pageable) {
+    @GetMapping("/search")
+    public ResponseEntity<Page<UserResponseDTO>> search(@ModelAttribute UserFilterDTO userFilterDTO,
+                                                        Pageable pageable) {
 
-        return ResponseEntity.ok(userService.findAll(pageable));
+        return ResponseEntity.ok(userService.search(userFilterDTO, pageable));
     }
 
     @GetMapping("/{id}")

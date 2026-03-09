@@ -40,7 +40,7 @@ public class Product {
     private Long version;
 
     @JoinColumn(name = "category_id")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Category category;
 
     public Product() {

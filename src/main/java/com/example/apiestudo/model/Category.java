@@ -5,6 +5,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "categories")
@@ -29,6 +30,9 @@ public class Category {
 
     @Version
     private Long version;
+
+    @OneToMany(mappedBy = "category")
+    private List<Product> products;
 
     public Category() {
 

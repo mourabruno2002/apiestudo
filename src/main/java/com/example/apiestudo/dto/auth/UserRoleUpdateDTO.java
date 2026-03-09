@@ -6,11 +6,15 @@ import jakarta.validation.constraints.NotNull;
 public class UserRoleUpdateDTO {
 
     @NotNull(message = "Role is required.")
-    private UserRole role;
+    private UserRole newRole;
 
     // GETTERS
-    public UserRole getRole() {
-        return role;
+    public UserRole getNewRole() {
+        return newRole;
     }
 
+    // SETTERS
+    public void setNewRole(UserRole newRole) {
+        this.newRole = newRole;
+    }
 }

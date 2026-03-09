@@ -9,9 +9,11 @@ import com.example.apiestudo.model.Category;
 import com.example.apiestudo.model.Product;
 import com.example.apiestudo.repository.CategoryRepository;
 import com.example.apiestudo.repository.ProductRepository;
+import com.example.apiestudo.specification.ProductSpecification;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -50,9 +52,19 @@ public class ProductService {
         return productMapper.convertProductToResponse(getById(id));
     }
 
-    public Page<ProductResponseDTO> findAll(Pageable pageable) {
+    public Page<ProductResponseDTO> search(ProductFilterDTO productFilterDTO, Pageable pageable) {
+        if (productFilterDTO.getPriceMin() != null && productFilterDTO.getPriceMax() != null && productFilterDTO.getPriceMin().compareTo(productFilterDTO.getPriceMax()) > 0) {
+            throw new IllegalArgumentException("priceMin cannot be greater than priceMax");
+        }
 
-        return productRepository.findAll(pageable).map(productMapper::convertProductToResponse);
+        Specification<Product> spec = Specification.where(ProductSpecification.fetchCategory());
+        spec = spec.and(ProductSpecification.nameContaining(productFilterDTO.getName()));
+        spec = spec.and(ProductSpecification.hasSku(productFilterDTO.getSku()));
+        spec = spec.and(ProductSpecification.isActive(productFilterDTO.getActive()));
+        spec = spec.and(ProductSpecification.categoryNameContaining(productFilterDTO.getCategoryName()));
+        spec = spec.and(ProductSpecification.findByPrice(productFilterDTO.getPriceMin(), productFilterDTO.getPriceMax()));
+
+        return productRepository.findAll(spec, pageable).map(productMapper::convertProductToResponse);
     }
 
     @PreAuthorize("hasRole('ADMIN')")

@@ -10,15 +10,16 @@ import com.example.apiestudo.exception.domain.user.WeakPasswordException;
 import com.example.apiestudo.mapper.UserMapper;
 import com.example.apiestudo.model.User;
 import com.example.apiestudo.repository.UserRepository;
+import com.example.apiestudo.specification.UserSpecification;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -63,8 +64,13 @@ public class UserService {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    public Page<UserResponseDTO> findAll(Pageable pageable) {
-        return userRepository.findAll(pageable).map(userMapper::convertUserToResponse);
+    public Page<UserResponseDTO> search(UserFilterDTO userFilterDTO, Pageable pageable) {
+        Specification<User> spec = Specification.where(null);
+        spec = spec.and(UserSpecification.isActive(userFilterDTO.getActive()));
+        spec = spec.and(UserSpecification.nameContaining(userFilterDTO.getName()));
+        spec = spec.and(UserSpecification.hasRole(userFilterDTO.getRole()));
+
+        return userRepository.findAll(spec, pageable).map(userMapper::convertUserToResponse);
     }
 
     @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
@@ -127,7 +133,7 @@ public class UserService {
     public void updateRole(Long id, UserRoleUpdateDTO userRoleUpdateDTO) {
         User foundUser = getUserById(id);
 
-        foundUser.setRole(userRoleUpdateDTO.getRole());
+        foundUser.setRole(userRoleUpdateDTO.getNewRole());
 
         userRepository.save(foundUser);
     }

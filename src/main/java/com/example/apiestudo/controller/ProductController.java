@@ -31,10 +31,11 @@ public class ProductController {
         return ResponseEntity.ok(productService.findById(id));
     }
 
-    @GetMapping
-    public ResponseEntity<Page<ProductResponseDTO>> findAll(Pageable pageable) {
+    @GetMapping("/search")
+    public ResponseEntity<Page<ProductResponseDTO>> search(@Valid @ModelAttribute ProductFilterDTO productFilterDTO,
+                                                           Pageable pageable) {
 
-        return ResponseEntity.ok(productService.findAll(pageable));
+        return ResponseEntity.ok(productService.search(productFilterDTO, pageable));
     }
 
     @PatchMapping("/{id}")

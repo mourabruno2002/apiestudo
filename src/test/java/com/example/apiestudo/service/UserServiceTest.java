@@ -1,10 +1,12 @@
 package com.example.apiestudo.service;
 
+import com.example.apiestudo.dto.auth.UserRoleUpdateDTO;
 import com.example.apiestudo.dto.user.PasswordUpdateDTO;
 import com.example.apiestudo.dto.user.UserRequestDTO;
 import com.example.apiestudo.dto.user.UserResponseDTO;
 import com.example.apiestudo.dto.user.UserUpdateDTO;
 import com.example.apiestudo.enums.UserRole;
+import com.example.apiestudo.exception.domain.user.InvalidCurrentPasswordException;
 import com.example.apiestudo.exception.domain.user.UserAlreadyExistsException;
 import com.example.apiestudo.exception.domain.user.UserNotFoundException;
 import com.example.apiestudo.exception.domain.user.WeakPasswordException;
@@ -50,7 +52,7 @@ public class UserServiceTest {
 
     
     @Nested
-    class CreateUser {
+    class Create {
         @Test
         void shouldThrowUserAlreadyExistsExceptionWhenUsernameAlreadyExists() {
             UserRequestDTO userRequestDTO = new UserRequestDTO();
@@ -405,6 +407,129 @@ public class UserServiceTest {
             verify(userRepository, never()).save(any());
         }
 
+        @Test
+        void shouldThrowsInvalidCurrentPasswordExceptionWhenCurrentPasswordIsInvalid() {
+            Long id = 10L;
+            PasswordUpdateDTO passwordUpdateDTO = new PasswordUpdateDTO();
+            passwordUpdateDTO.setNewPassword("Password@123");
+            passwordUpdateDTO.setCurrentPassword("oldPassword");
+
+            User user = new User();
+            user.setUsername("test@email.com");
+            user.setPassword("encodedOldPassword");
+
+            when(userRepository.findById(id)).thenReturn(Optional.of(user));
+            when(passwordEncoder.matches(passwordUpdateDTO.getCurrentPassword(), user.getPassword())).thenReturn(false);
+
+            assertThrows(InvalidCurrentPasswordException.class, () -> {
+               userService.updatePassword(id, passwordUpdateDTO);
+            });
+
+            verify(userRepository).findById(id);
+            verify(passwordEncoder, never()).encode(any());
+            verify(userRepository, never()).save(any());
+        }
+
+        @Test
+        void shouldUpdateUserPasswordSuccessfully() {
+            Long id = 10L;
+            PasswordUpdateDTO passwordUpdateDTO = new PasswordUpdateDTO();
+            passwordUpdateDTO.setNewPassword("Password@123");
+            passwordUpdateDTO.setCurrentPassword("oldPassword");
+
+            User user = new User();
+            user.setUsername("test@email.com");
+            user.setPassword("encodedOldPassword");
+
+            when(userRepository.findById(id)).thenReturn(Optional.of(user));
+            when(passwordEncoder.matches(passwordUpdateDTO.getCurrentPassword(), user.getPassword())).thenReturn(true);
+            when(passwordEncoder.encode(passwordUpdateDTO.getNewPassword())).thenReturn("encodedNewPassword");
+
+            userService.updatePassword(id, passwordUpdateDTO);
+
+            ArgumentCaptor<User> argumentCaptor = ArgumentCaptor.forClass(User.class);
+
+            verify(userRepository).save(argumentCaptor.capture());
+            verify(userRepository).findById(id);
+            verify(passwordEncoder).matches(passwordUpdateDTO.getCurrentPassword(), "encodedOldPassword");
+            verify(passwordEncoder).encode(passwordUpdateDTO.getNewPassword());
+
+            User userUpdated = argumentCaptor.getValue();
+
+            assertEquals("encodedNewPassword", userUpdated.getPassword());
+        }
+    }
+
+    @Nested
+    class UpdateRole{
+
+        @Test
+        void shouldThrowsUserNotFoundExceptionWhenUserNotExists() {
+            Long id = 10L;
+            UserRoleUpdateDTO userRoleUpdateDTO = new UserRoleUpdateDTO();
+
+            when(userRepository.findById(id)).thenReturn(Optional.empty());
+
+            assertThrows(UserNotFoundException.class, () -> {
+               userService.updateRole(id, userRoleUpdateDTO);
+            });
+
+            verify(userRepository).findById(id);
+            verify(userRepository, never()).save(any());
+        }
+
+        @Test
+        void shouldUpdateUserRoleSuccessfully() {
+            Long id = 10L;
+            UserRoleUpdateDTO userRoleUpdateDTO = new UserRoleUpdateDTO();
+            userRoleUpdateDTO.setNewRole(UserRole.ADMIN);
+
+            User user = new User();
+
+            when(userRepository.findById(id)).thenReturn(Optional.of(user));
+
+            userService.updateRole(id, userRoleUpdateDTO);
+
+            ArgumentCaptor<User> argumentCaptor = ArgumentCaptor.forClass(User.class);
+
+            verify(userRepository).findById(id);
+            verify(userRepository).save(argumentCaptor.capture());
+
+            User userUpdated = argumentCaptor.getValue();
+
+            assertEquals(UserRole.ADMIN, userUpdated.getRole());
+        }
+    }
+
+    @Nested
+    class Delete {
+
+        @Test
+        void shouldThrowsUserNotFoundExceptionWhenUserNotExists() {
+            Long id = 10L;
+
+            when(userRepository.findById(id)).thenReturn(Optional.empty());
+
+            assertThrows(UserNotFoundException.class, () -> {
+               userService.deleteById(id);
+            });
+
+            verify(userRepository).findById(id);
+            verify(userRepository, never()).deleteById(any());
+        }
+
+        @Test
+        void shouldDeleteUserSuccessfully() {
+            Long id = 10L;
+            User user = new User();
+
+            when(userRepository.findById(id)).thenReturn(Optional.of(user));
+
+            userService.deleteById(id);
+
+            verify(userRepository).findById(id);
+            verify(userRepository).deleteById(id);
+        }
     }
 
 }
