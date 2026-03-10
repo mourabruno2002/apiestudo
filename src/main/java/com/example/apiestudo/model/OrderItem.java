@@ -113,12 +113,21 @@ public class OrderItem {
     //endregion
 
     //DOMAIN METHODS
-    public void increaseQuantity(Integer amount) {
+    protected boolean isEmpty() {
+        return this.quantity <= 0;
+    }
+
+    protected void increaseQuantity(Integer amount) {
         quantity += amount;
         recalculateSubtotal();
     }
 
-    public void recalculateSubtotal() {
+    protected void decreaseQuantity(Integer amount) {
+        quantity -= amount;
+        recalculateSubtotal();
+    }
+
+    protected void recalculateSubtotal() {
 
         this.subtotal = this.unitPrice.multiply(BigDecimal.valueOf(this.quantity));
     }

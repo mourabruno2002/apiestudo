@@ -153,24 +153,52 @@ public class Order {
 
     public void addItem(Product product, int quantity) {
 
-        Optional<OrderItem> existingItem = items.stream().filter(item -> item.getProduct().getId().equals(
-                product.getId())).findFirst();
+        Optional<OrderItem> existingItem = findOrderItemByProductId(product.getId());
 
-        if (existingItem.isPresent()) {
-            existingItem.get().increaseQuantity(quantity);
-        } else {
-            OrderItem item = new OrderItem(product, quantity);
-            addItemInternal(item);
-        }
+        existingItem.ifPresentOrElse(
+                item -> item.increaseQuantity(quantity), () -> addItemInternal(new OrderItem(product, quantity)));
 
         recalculateTotals();
+    }
+
+    public void removeItem(Product product, int quantity) {
+
+    }
+
+    public void increaseItemQuantity(Long productId, int amount) {
+        Optional<OrderItem> orderItem = findOrderItemByProductId(productId);
+
+        if (orderItem.isPresent()) {
+            orderItem.get().increaseQuantity(amount);
+            recalculateTotals();
+        }
+    }
+
+    public void decreaseItemQuantity(Long productId, int amount) {
+        Optional<OrderItem> orderItem = findOrderItemByProductId(productId);
+
+        orderItem.ifPresent(item -> {
+            item.decreaseQuantity(amount);
+
+            if (item.isEmpty()) {
+                this.items.remove(item);
+            }
+
+            recalculateTotals();
+        });
     }
     //endregion
 
     //region HELPER METHODS
     private void addItemInternal(OrderItem item) {
         item.setOrder(this);
-        items.add(item);
+        this.items.add(item);
+    }
+
+    private Optional<OrderItem> findOrderItemByProductId(Long productId) {
+
+        return this.items.stream().filter(item -> item.getProduct().getId().equals(productId))
+                .findFirst();
     }
     //endregion
 
