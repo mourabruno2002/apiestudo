@@ -23,9 +23,7 @@ public class OrderItem {
 
     private int quantity;
 
-    private BigDecimal discount = BigDecimal.ZERO;
-
-    private BigDecimal subtotal;
+    private BigDecimal discountPerUnit = BigDecimal.ZERO;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
@@ -52,7 +50,7 @@ public class OrderItem {
         this.unitPrice = product.getPrice();
         this.product = product;
         this.quantity = quantity;
-        recalculateSubtotal();
+        getSubtotal();
     }
 
 
@@ -77,12 +75,12 @@ public class OrderItem {
         return quantity;
     }
 
-    public BigDecimal getDiscount() {
-        return discount;
+    public BigDecimal getDiscountPerUnit() {
+        return discountPerUnit;
     }
 
     public BigDecimal getSubtotal() {
-        return subtotal;
+        return this.unitPrice.multiply(BigDecimal.valueOf(this.quantity));
     }
 
     public Product getProduct() {
@@ -119,21 +117,18 @@ public class OrderItem {
 
     protected void increaseQuantity(Integer amount) {
         quantity += amount;
-        recalculateSubtotal();
     }
 
     protected void decreaseQuantity(Integer amount) {
         quantity -= amount;
-        recalculateSubtotal();
     }
 
-    protected void recalculateSubtotal() {
-
-        this.subtotal = this.unitPrice.multiply(BigDecimal.valueOf(this.quantity));
+    protected BigDecimal getItemDiscount() {
+        return this.discountPerUnit.multiply(BigDecimal.valueOf(this.quantity));
     }
 
-    public BigDecimal getTotal() {
-        return this.subtotal.subtract(this.discount);
+    protected BigDecimal getTotal() {
+
+        return getSubtotal().subtract(getItemDiscount());
     }
-    //endregion
 }
