@@ -44,7 +44,7 @@ public class OrderItem {
 
     public OrderItem(){};
 
-    public OrderItem(Product product, int quantity) {
+    protected OrderItem(Product product, int quantity) {
         this.productName = product.getName();
         this.SKU = product.getSku();
         this.unitPrice = product.getPrice();

@@ -1,14 +1,14 @@
-package com.example.apiestudo.service;
+package com.example.apiestudo;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MapperService {
+public class GenericConverter {
 
     private final ModelMapper modelMapper;
 
-    public MapperService(ModelMapper modelMapper) {
+    public GenericConverter(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
     }
 

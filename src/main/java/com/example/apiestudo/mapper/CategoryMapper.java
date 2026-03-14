@@ -3,7 +3,7 @@ package com.example.apiestudo.mapper;
 import com.example.apiestudo.dto.category.CategoryRequestDTO;
 import com.example.apiestudo.dto.category.CategoryResponseDTO;
 import com.example.apiestudo.model.Category;
-import com.example.apiestudo.service.MapperService;
+import com.example.apiestudo.GenericConverter;
 import org.springframework.stereotype.Component;
 
 import java.time.ZoneOffset;
@@ -11,14 +11,14 @@ import java.time.ZoneOffset;
 @Component
 public class CategoryMapper {
 
-    private final MapperService mapperService;
+    private final GenericConverter genericConverter;
 
-    public CategoryMapper(MapperService mapperService) {
-        this.mapperService = mapperService;
+    public CategoryMapper(GenericConverter genericConverter) {
+        this.genericConverter = genericConverter;
     }
 
     public Category convertRequestToCategory(CategoryRequestDTO categoryRequestDTO) {
-        return mapperService.map(categoryRequestDTO, Category.class);
+        return genericConverter.map(categoryRequestDTO, Category.class);
     }
 
     public CategoryResponseDTO convertCategoryToResponse(Category category) {

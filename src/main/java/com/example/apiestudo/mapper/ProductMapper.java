@@ -3,7 +3,7 @@ package com.example.apiestudo.mapper;
 import com.example.apiestudo.dto.product.ProductRequestDTO;
 import com.example.apiestudo.dto.product.ProductResponseDTO;
 import com.example.apiestudo.model.Product;
-import com.example.apiestudo.service.MapperService;
+import com.example.apiestudo.GenericConverter;
 import org.springframework.stereotype.Component;
 
 import java.time.ZoneOffset;
@@ -11,14 +11,14 @@ import java.time.ZoneOffset;
 @Component
 public class ProductMapper {
 
-    private final MapperService mapperService;
+    private final GenericConverter genericConverter;
 
-    public ProductMapper(MapperService mapperService) {
-        this.mapperService = mapperService;
+    public ProductMapper(GenericConverter genericConverter) {
+        this.genericConverter = genericConverter;
     }
 
     public Product convertRequestToProduct(ProductRequestDTO productRequestDTO) {
-        return mapperService.map(productRequestDTO, Product.class);
+        return genericConverter.map(productRequestDTO, Product.class);
     }
 
     public ProductResponseDTO convertProductToResponse(Product product) {
